@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Add one fields for display Rank in existing model 'hr.employee' kanban view-->
+    <record id="hr_kanban_view_employees_task_rank_inherited" model="ir.ui.view" >
+        <field name="name">hr.employee.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='work_location']" position = 'after'>
+                <ul>
+                    <li groups = "abs_task_rank.group_only_show_task_rank"><label>Task Rank : <field name="number_task_rank"/></label></li>
+                </ul>
+            </xpath>
+
+            <!--<xpath expr="//div[@class='oe_kanban_global_click o_kanban_record_has_image_fill o_hr_kanban_record']" position = 'inside'>
+                <ul>
+                    <li groups = "abs_task_rank.group_only_show_task_rank"><label>Task Rank : <field name="number_task_rank"/></label></li>
+                </ul>
+            </xpath>-->
+        </field>
+    </record>
+
+</odoo>

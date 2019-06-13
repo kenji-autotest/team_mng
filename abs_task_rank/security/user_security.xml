@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data> 
+        <record id="group_only_show_task_rank" model="res.groups">
+            <field name="name">Show Task Rank</field>
+        </record>  
+    </data>
+</odoo>
+
