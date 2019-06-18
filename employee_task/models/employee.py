@@ -21,6 +21,7 @@
 
 from odoo import api, fields, models, _
 
+
 class Employee(models.Model):
 
     _inherit = "hr.employee"
@@ -32,7 +33,7 @@ class Employee(models.Model):
         for employee in self:
             user = employee.user_id
             if user:
-                tasks = self.env['project.task'].sudo().search([('user_id','=',user.id)])
+                tasks = self.env['project.task'].sudo().search([('user_id', '=', user.id)])
                 employee.tasks = "Tasks: " + str(len(tasks))
                 employee.tasks_count = str(len(tasks))
 
@@ -40,7 +41,7 @@ class Employee(models.Model):
     def display_employee_tasks(self):
         """Display employee tasks"""
         if self.user_id:
-            context="{'group_by':'stage_id'}"
+            context = "{'group_by':'stage_id'}"
             template_id = self.env.ref('project.view_task_tree2').id
             search_id = self.env.ref('project.view_task_search_form').id
             return {
@@ -57,7 +58,7 @@ class Employee(models.Model):
                           (self.env.ref('project.view_project_task_pivot').id, 'pivot'),
                           (self.env.ref('project.view_project_task_graph').id, 'graph')],
                 'search_view_id': search_id,
-                'domain': [('user_id','=',self.user_id.id)],
+                'domain': [('user_id', '=', self.user_id.id)],
                 'context': context
              }
 

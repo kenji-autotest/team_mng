@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="employee_project_inherit_form" model="ir.ui.view">
+			<field name="name">employee_project_inherit_form</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<div name="button_box" position="inside">
+					<button name="project_ids"
+                            class="oe_stat_button"
+                            icon="fa-folder-open"
+                            type="object"
+                            groups="project.group_project_user,project.group_project_manager">
+						<field name="project_count" widget="statinfo" string="Projects"/>
+					</button>
+				</div>
+			</field>
+		</record>
+    </data>
+</odoo>
