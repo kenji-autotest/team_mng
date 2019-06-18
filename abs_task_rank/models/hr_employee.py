@@ -21,6 +21,8 @@
 from odoo import api, fields, models, _
 
 ## inherit class 'hr.employee' to get details of employee and set rank according to assigned Tasks to salesperson
+
+
 class Employee(models.Model):
     _inherit = "hr.employee"
 
@@ -31,11 +33,12 @@ class Employee(models.Model):
         for employee in self:
             if employee.user_id:
                 tasks_list = []
-                task_ids = self.env['project.task'].search([('user_id','=',employee.user_id.id)])
+                task_ids = self.env['project.task'].search([('user_id', '=', employee.user_id.id)])
                 for task in task_ids:
                     if task.stage_id.name == 'Done':
                         tasks_list.append(task)
-                employee_dict = { 'employee' : employee , 'length' : len(tasks_list)}
+                employee_dict = {'employee': employee,
+                                 'length': len(tasks_list)}
                 employee_rank_list.append(employee_dict)
 
         ## sorted dictionary to get rank of employee
@@ -44,5 +47,5 @@ class Employee(models.Model):
         for line in newlist:
             if line:
                 rank = rank + 1
-                line['employee'].update({'number_task_rank' : rank})
+                line['employee'].update({'number_task_rank': rank})
 

@@ -9,7 +9,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_location']" position = 'after'>
                 <ul>
-                    <li groups = "abs_task_rank.group_only_show_task_rank"><label>Task Rank : <field name="number_task_rank"/></label></li>
+                    <li groups = "abs_task_rank.group_only_show_task_rank"><label>Task Rank: <field name="number_task_rank"/></label></li>
                 </ul>
             </xpath>
 

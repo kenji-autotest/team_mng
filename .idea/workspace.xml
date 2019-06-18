@@ -2,9 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f79fdcf6-fe8e-4d16-8dcc-51fddff0ac1d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/project_team/views/employee_project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/employee_task/models/employee.py" beforeDir="false" afterPath="$PROJECT_DIR$/employee_task/models/employee.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/project_team/models/project_team.py" beforeDir="false" afterPath="$PROJECT_DIR$/project_team/models/project_team.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/abs_task_rank/models/hr_employee.py" beforeDir="false" afterPath="$PROJECT_DIR$/abs_task_rank/models/hr_employee.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/abs_task_rank/views/hr_employee_kanban_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/abs_task_rank/views/hr_employee_kanban_view.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,6 +40,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
