@@ -2,7 +2,7 @@
 #################################################################################
 #
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2018-today Ascetic Business Solution <www.asceticbs.com>
+#    Copyright (C) 2017-today Ascetic Business Solution <www.asceticbs.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,23 +18,13 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 #################################################################################
-{
-    'name': "Employee Progress Ratio based on Task",
-    'author': 'Ascetic Business Solution',
-    'category': 'Project',
-    'summary': """Employee Progress Ratio based on Task""",
-    'website': 'http://www.asceticbs.com',
-    'license': 'AGPL-3',
-    'description': """ """,
-    'version': '1.0',
-    'depends': ['base','project','hr'],
-    'data': ['security/user_security.xml','views/hr_employee_kanban_view.xml'],
-    'images': ['static/description/banner.png'],
-    'installable': True,
-    'application': True,
-    'auto_install': False,
-}
+
+from odoo import api, fields, models, _
 
 
+class Employee(models.Model):
 
+    _inherit = "hr.employee"
+
+    skype = fields.Char(string='Skype')
 

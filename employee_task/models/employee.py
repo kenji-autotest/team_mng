@@ -28,6 +28,24 @@ class Employee(models.Model):
 
     tasks = fields.Char(compute='_compute_tasks', string='Tasks')
     tasks_count = fields.Integer(compute='_compute_tasks', string='Tasks')
+    projects = fields.Char(compute='_compute_project_count', string='Projects')
+    project_ids = fields.Many2many('project.project', compute='_compute_project_count', string='Projects')
+    project_count = fields.Integer(compute='_compute_project_count', string="#Project")
+
+    def _compute_project_count(self):
+        project = self.env['project.project'].sudo()
+        for employee in self:
+            user = employee.user_id
+            if user:
+                project_ids = project.search(['|', ('members', 'in', [user.id]),
+                                              ('user_id', '=', user.id),
+                                              ('message_partner_ids', 'in', [user.partner_id.id])
+                                              ])
+                project_count = len(set(project_ids.ids))
+                employee.update({'project_ids': [(6, 0, project_ids.ids)],
+                                 'projects': 'Projects: ' + str(project_count),
+                                 'project_count': project_count
+                                 })
 
     def _compute_tasks(self):
         for employee in self:
@@ -60,6 +78,25 @@ class Employee(models.Model):
                 'search_view_id': search_id,
                 'domain': [('user_id', '=', self.user_id.id)],
                 'context': context
+             }
+
+    @api.multi
+    def display_employee_projects(self):
+        """Display employee projects"""
+        if self.user_id:
+            template_id = self.env.ref('project.view_project').id
+            return {
+                'name': _('Employee Tasks'),
+                'view_type': 'form',
+                'view_mode': 'tree,kanban,form',
+                'res_model': 'project.project',
+                'type': 'ir.actions.act_window',
+                'view_id': template_id,
+                'views': [(self.env.ref('project.view_project').id, 'tree'),
+                          (self.env.ref('project.view_project_kanban').id, 'kanban'),
+                          (self.env.ref('project.edit_project').id, 'form'),
+                          ],
+                'domain': [('id', 'in', self.project_ids.ids)],
              }
 
 

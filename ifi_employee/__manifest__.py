@@ -2,7 +2,7 @@
 #################################################################################
 #
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2018-today Ascetic Business Solution <www.asceticbs.com>
+#    Copyright (C) 2018-Today Ascetic Business Solution <www.asceticbs.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,4 +19,20 @@
 #
 #################################################################################
 
-from . import models
+{
+    'name': "Employees",
+    'author': 'IFI Solution',
+    'category': 'Human Resources',
+    'summary': """Display some neccessary info on Employee form""",
+    'license': 'AGPL-3',
+    'website': 'http://www.ifisolution.com',
+    'description': """
+""",
+    'version': '1.0',
+    'depends': ['hr'],
+    'data': ['views/employee_view.xml'],
+    'images': [],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}

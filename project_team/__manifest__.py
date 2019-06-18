@@ -7,7 +7,7 @@
     'summary': 'Project Team Management',
     'category': 'Project Management',
     'website': 'http://www.serpentcs.com',
-    'version': '11.0.1.0.0',
+    'version': '12',
     'license': 'AGPL-3',
     'depends': [
         'project',
@@ -15,7 +15,7 @@
         'web',
     ],
     'data': [
-        'views/project_team_view.xml',
+        'views/project_view.xml',
     ],
     'images': [
         'static/description/ProjectTeam.png',

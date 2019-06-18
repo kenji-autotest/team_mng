@@ -20,20 +20,3 @@ class ProjectProject(models.Model):
         if self.team_id:
             self.members = [(6, 0, [member.id for member in self.team_id.team_members])]
 
-
-class Employee(models.Model):
-    _inherit = 'hr.employee'
-
-    project_ids = fields.Many2many('project.project', compute='_compute_project_count')
-    project_count = fields.Integer(string="#Project", compute='_compute_project_count')
-
-    @api.multi
-    def _compute_project_count(self):
-        project = self.env['project.project'].sudo()
-        for employee in self:
-            user = employee.user_id
-            if user:
-                project_ids = project.search([('members', 'in', [user.id])])
-            employee.update({'project_ids': [(6, 0, project_ids.ids)],
-                             'project_count': len(set(project_ids.ids))
-                             })
