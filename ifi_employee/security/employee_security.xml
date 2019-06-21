@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_hr_department_manager" model="res.groups">
+        <field name="name">Department Manager</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+    <record id="group_hr_department_vice" model="res.groups">
+        <field name="name">Vice Department Manager</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="category_id" ref="base.module_category_human_resources"/>
+    </record>
+
+</odoo>
