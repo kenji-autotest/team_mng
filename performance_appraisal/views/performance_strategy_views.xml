@@ -33,7 +33,7 @@
                 <form string="Strategy">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="toggle_active" type="object" groups="performance_appraisal.group_appraisal_manager"
+                            <button name="toggle_active" type="object" groups="performance_appraisal.group_performance_appraisal_manager"
                                     class="oe_stat_button" icon="fa-archive">
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
@@ -86,6 +86,6 @@
     </record>
 
     <menuitem id="menu_strategy_performance_appraisal_config" name="Strategy" parent="menu_performance_appraisal_config"
-        sequence="10" groups="performance_appraisal.group_project_manager"/>
+        sequence="10" groups="group_performance_appraisal_manager"/>
 
 </odoo>

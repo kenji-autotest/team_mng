@@ -2,10 +2,10 @@
 <odoo>
  <!-- Top menu item -->
     <menuitem name="Appraisal"
-        id="menu_main_performance_appraisal"
-        sequence="2"/>
+        id="menu_main_performance_appraisal" groups="base.group_user"
+        sequence="20"/>
 
     <menuitem id="menu_performance_appraisal_config" name="Configuration" parent="menu_main_performance_appraisal"
-        sequence="100" />
+        sequence="100" groups="performance_appraisal.group_performance_appraisal_manager,performance_appraisal.group_performance_appraisal_readall"/>
 
 </odoo>

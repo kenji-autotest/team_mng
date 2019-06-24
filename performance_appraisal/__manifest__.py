@@ -10,13 +10,14 @@
     'summary': 'Employee Performance Appraisal',
     'depends': [
         'base_setup',
+        'hr',
         'ifi_employee',
-        'hr'
+
     ],
     'description': "",
     'data': [
-        # 'security/performance_appraisal_security.xml',
-        # 'security/ir.model.access.csv',
+        'security/performance_appraisal_security.xml',
+        'security/ir.model.access.csv',
         'views/performance_appraisal_menu.xml',
         'views/performance_strategy_views.xml',
     ],

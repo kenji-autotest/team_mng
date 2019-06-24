@@ -11,7 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 class IFIPerformanceStrategy(models.Model):
     _name = "performance.strategy"
     _description = "Performance Strategy"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
@@ -52,6 +52,7 @@ class IFIPerformanceStrategy(models.Model):
 
 class IFIIndicatorWeighing(models.Model):
     _name = 'indicator.weigh'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     indicator_id = fields.Many2one('performance.indicator', string="Indicator", ondelete='restrict')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
@@ -64,6 +65,7 @@ class IFIIndicatorWeighing(models.Model):
 
 class IFIPerformanceIndicator(models.Model):
     _name = 'performance.indicator'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     indicator = fields.Char()
     value_ids = fields.Many2many('indicator.value', 'performance_indicator_value_rel', 'indicator_id', 'value_id',
@@ -83,7 +85,7 @@ class IFIPerformanceIndicator(models.Model):
 
 class IFIPerformanceIndicatorValues(models.Model):
     _name = 'indicator.value'
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'sequence'
 
     indicator_id = fields.Many2many('performance.indicator', 'performance_indicator_value_rel', 'value_id', 'indicator_id',
@@ -100,7 +102,7 @@ class IFIPerformanceIndicatorValues(models.Model):
 class IFIEmployeePerformance(models.Model):
     _name = "employee.performance.appraisal"
     _description = "Employee Performance Appraisal"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     name = fields.Char(required=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
@@ -149,7 +151,7 @@ class IFIEmployeePerformance(models.Model):
 class IFIEmployeePerformanceDetails(models.Model):
     _name = "employee.performance.appraisal.details"
     _description = "Employee Performance Appraisal"
-    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     appraisal_id = fields.Many2one('employee.performance.appraisal', string='Appraisal', required=True,
                                    track_visibility='onchange')
