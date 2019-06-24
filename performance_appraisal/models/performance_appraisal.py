@@ -154,15 +154,14 @@ class IFIEmployeePerformanceDetails(models.Model):
     employee_id = fields.Many2one('hr.employee', string='Employee', related='appraisal_id.employee_id', required=True,
                                   track_visibility='onchange', store=True)
     department_id = fields.Many2one('hr.department', string='Department', related='appraisal_id.department_id',
-                                    store=True,
-                                    track_visibility='onchange')
+                                    store=True, track_visibility='onchange')
     job_title = fields.Char("Job Title", related='appraisal_id.job_title', store=True, track_visibility='onchange')
     reviewer_id = fields.Many2one('hr.employee', string='Manager', required=True)
     date = fields.Date(string='Appraisal Date', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
     indicator_id = fields.Many2one('indicator.weigh')
-    value_id = fields.Many2one('indicator.value', string="Score")
     weigh = fields.Float(related='indicator_id.weight', store=True)
+    value_id = fields.Many2one('indicator.value', string="Score")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
 
