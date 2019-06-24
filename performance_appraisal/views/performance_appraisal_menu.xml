@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
  <!-- Top menu item -->
-    <menuitem name="Appraisal"
+    <menuitem name="Appraisal" web_icon="performance_appraisal,static/description/icon.png"
         id="menu_main_performance_appraisal" groups="base.group_user"
         sequence="20"/>
 
