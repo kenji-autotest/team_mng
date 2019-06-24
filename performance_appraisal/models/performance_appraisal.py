@@ -11,6 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 class IFIPerformanceStrategy(models.Model):
     _name = "performance.strategy"
     _description = "Performance Strategy"
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
 
     name = fields.Char(required=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
@@ -54,7 +55,7 @@ class IFIIndicatorWeighing(models.Model):
 
     indicator_id = fields.Many2one('performance.indicator', string="Indicator", ondelete='restrict')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    value_guide = field.Text(string="Guide", related='indicator_id.rating_guide')
+    value_guide = fields.Text(string="Guide", related='indicator_id.rating_guide')
     value_ids = fields.One2many('indicator.value', 'indicator_id', string="Values")
     weight = fields.Float("Weight(%)")
     note = fields.Char()
@@ -67,7 +68,7 @@ class IFIPerformanceIndicator(models.Model):
     indicator = fields.Char()
     value_ids = fields.Many2many('indicator.value', 'performance_indicator_value_rel', 'indicator_id', 'value_id',
                                  string="Values", default=lambda self: self.env['indicator.value'].search([]))
-    rating_guide = field.Text(string="Guide", compute='_compute_rating_guide', store=True)
+    rating_guide = fields.Text(string="Guide", compute='_compute_rating_guide', store=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
 
@@ -82,6 +83,7 @@ class IFIPerformanceIndicator(models.Model):
 
 class IFIPerformanceIndicatorValues(models.Model):
     _name = 'indicator.value'
+    _inherit = ['portal.mixin', 'mail.alias.mixin', 'mail.thread']
     _order = 'sequence'
 
     indicator_id = fields.Many2many('performance.indicator', 'performance_indicator_value_rel', 'value_id', 'indicator_id',

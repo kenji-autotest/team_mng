@@ -6,6 +6,6 @@
         sequence="2"/>
 
     <menuitem id="menu_performance_appraisal_config" name="Configuration" parent="menu_main_performance_appraisal"
-        sequence="100" groups="performance_appraisal.group_project_manager"/>
+        sequence="100" />
 
 </odoo>

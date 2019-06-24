@@ -15,9 +15,10 @@
     ],
     'description': "",
     'data': [
-        'security/performance_appraisal_security.xml',
-        'security/ir.model.access.csv',
-        'views/project_data.xml',
+        # 'security/performance_appraisal_security.xml',
+        # 'security/ir.model.access.csv',
+        'views/performance_appraisal_menu.xml',
+        'views/performance_strategy_views.xml',
     ],
     'qweb': [],
     'demo': [],

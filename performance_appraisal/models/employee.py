@@ -26,8 +26,8 @@ class IFIEmployeePerformance(models.Model):
 
     _inherit = "hr.employee"
 
-    performance_reviewer_ids = fields.Many2many('hr.employee', string="Performance Review",
-                                                default=lambda self: self.parent_id.id,
+    performance_reviewer_ids = fields.Many2many('hr.employee', 'hr_employee_performance_reviewer_rel',
+                                                'employee_id', 'reviewer_id', string="Performance Review",
                                                 help="These people will be requested to give performance appraisal for the employee",
                                                 )
     performance_strategy_ids = fields.Many2many('performance.strategy', 'hr_employee_performance_strategy_rel',

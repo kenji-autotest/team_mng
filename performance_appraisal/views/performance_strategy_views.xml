@@ -74,6 +74,18 @@
                     </div>
                 </form>
             </field>
-        </record>
+     </record>
+
+    <record model="ir.actions.act_window" id="open_view_performance_strategy_tree">
+        <field name="name">Review Strategy</field>
+        <field name="res_model">performance.strategy</field>
+        <field name="view_type">tree</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_performance_strategy_list"/>
+        <field name="search_view_id" ref="performance_strategy_search_view"/>
+    </record>
+
+    <menuitem id="menu_strategy_performance_appraisal_config" name="Strategy" parent="menu_performance_appraisal_config"
+        sequence="10" groups="performance_appraisal.group_project_manager"/>
 
 </odoo>
