@@ -9,7 +9,7 @@
 Allows multiple managers to approve Leave
 """,
     'depends': ['hr_holidays, ifi_employee'],
-    'data': ['views/account_views.xml'],
+    'data': [],
     'demo': [],
     'installable': True,
     'auto_install': False,

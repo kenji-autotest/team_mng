@@ -22,9 +22,15 @@
 from odoo import api, fields, models, _
 
 
-class IFIEmployee(models.Model):
+class IFIEmployeePerformance(models.Model):
 
     _inherit = "hr.employee"
 
-    skype = fields.Char(string='Skype')
+    performance_reviewer_ids = fields.Many2many('hr.employee', string="Performance Review",
+                                                default=lambda self: self.parent_id.id,
+                                                help="These people will be requested to give performance appraisal for the employee",
+                                                )
+    performance_strategy_ids = fields.Many2many('performance.strategy', 'hr_employee_performance_strategy_rel',
+                                                'employee_id', 'strategy_id',
+                                                string="Performance Strategies")
 

@@ -5,6 +5,13 @@ from odoo import models, api, _
 from odoo.exceptions import UserError
 
 
+# class IFIEmployee(models.Model):
+#
+#     _inherit = "hr.employee"
+#
+#     manager_ids = fields.Many2many('hr.employee', string='Other Managers')
+
+
 class IFIEmployeeLeave(models.Model):
     _inherit = 'hr.leave'
 
@@ -21,5 +28,15 @@ class IFIEmployeeLeave(models.Model):
                         and holiday.employee_id.department_id \
                         and self.user.employee_id.department_id == holiday.employee_id.department_id:
                     holiday.can_approve = True
+
+    # @api.multi
+    # def add_follower(self, employee_id):
+    #     super(IFIEmployeeLeave, self).add_follower(employee_id)
+    #     partner_ids = []
+    #     for i in employee_id.manager_ids:
+    #         if i.user_id:
+    #             partner_ids.append(i.user_id.partner_id.id)
+    #     if partner_ids:
+    #         self.message_subscribe(partner_ids=partner_ids)
 
 
