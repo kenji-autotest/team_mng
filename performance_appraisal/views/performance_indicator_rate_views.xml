@@ -2,12 +2,13 @@
 <odoo>
 
     <record model="ir.ui.view" id="performance_indicator_value_search_view">
-            <field name="name">Rating Levels</field>
+            <field name="name">Rates</field>
             <field name="model">indicator.value</field>
             <field name="arch" type="xml">
                 <search string="Indicator">
                     <field name="name"/>
                     <field name="code"/>
+                    <field name="conceptual_score"/>
                     <field name="indicator_id"/>
                 </search>
             </field>
@@ -17,7 +18,7 @@
         <field name="name">performance.indicator.value.list</field>
         <field name="model">indicator.value</field>
         <field name="arch" type="xml">
-            <tree string="Rating Levels" toolbar="1" >
+            <tree string="Indicator Rates" toolbar="1" >
                 <field name="name"/>
                 <field name="code"/>
                 <field name="conceptual_score"/>
@@ -31,7 +32,7 @@
             <field name="name">performance.indicator.value.form</field>
             <field name="model">indicator.value</field>
             <field name="arch" type="xml">
-                <form string="Rating Levels">
+                <form string="Rate">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" groups="performance_appraisal.group_performance_appraisal_manager"
@@ -64,7 +65,7 @@
      </record>
 
     <record model="ir.actions.act_window" id="open_view_performance_indicator_value_tree">
-        <field name="name">Rating Levels</field>
+        <field name="name">Indicator Rates</field>
         <field name="res_model">indicator.value</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>

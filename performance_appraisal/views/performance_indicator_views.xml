@@ -45,7 +45,13 @@
                         </div>
                         <group>
                             <field name="description" />
-                            <field name="value_ids" />
+                            <field name="value_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="description"/>
+                                </tree>
+                            </field>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
 

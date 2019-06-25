@@ -21,7 +21,7 @@
         'views/menu.xml',
         'views/performance_strategy_views.xml',
         'views/performance_indicator_views.xml',
-        'views/performance_indicator_values_views.xml',
+        'views/performance_indicator_rate_views.xml',
         'views/employee_views.xml',
         'views/performance_appraisal_views.xml',
     ],

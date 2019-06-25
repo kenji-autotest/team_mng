@@ -7,18 +7,13 @@
         <field name="arch" type="xml">
             <xpath expr="//page[@name='hr_settings']" position="after">
                 <page name="appraisal_settings" string="Appraisal Settings" groups="hr.group_hr_user,performance_appraisal.group_performance_appraisal_manager,ifi_employee.group_hr_department_manager,ifi_employee.group_hr_department_vice">
-                    <group>
-                        <group string="Strategies" name="strategies">
-                            <field name="performance_strategy_ids" widget="many2many_tags" options="{'no_create':True}"/>
-                            <field name="performance_reviewer_ids" string="Reviewers">
-                                <tree editable="top">
-                                    <field name="name"/>
-                                    <field name="department_id"/>
-                                    <field name="job_title"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </group>
+                    <field name="appraisal_strategy_ids" string="Appraisal Reviewers">
+                        <tree editable="top">
+                            <field name="employee_id" context="{'default_employee_id': active_id}" invisible="1"/>
+                            <field name="strategy_id"/>
+                            <field name="reviewer_ids" widget="many2many_tags" options="{'no_create':True}"/>
+                        </tree>
+                    </field>
                 </page>
             </xpath>
         </field>
