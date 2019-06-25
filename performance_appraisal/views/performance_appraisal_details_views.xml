@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="performance_appraisal_detail_search_view">
+            <field name="name">indicator.search</field>
+            <field name="model">employee.performance.appraisal.details</field>
+            <field name="arch" type="xml">
+                <search string="appraisal">
+                    <field name="indicator_id"/>
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="job_title"/>
+                    <field name="reviewer_id"/>
+                </search>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_performance_appraisal_detail_list">
+        <field name="name">performance.appraisal.detail.list</field>
+        <field name="model">employee.performance.appraisal.details</field>
+        <field name="arch" type="xml">
+            <tree string="Appraisals" toolbar="1" >
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="job_title" />
+                <field name="department_id"/>
+                <field name="reviewer_id" />
+                <field name="indicator_id"/>
+                <field name="value_id"/>
+                <field name="score" />
+            </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_performance_appraisal_detail_pivot">
+        <field name="name">view_performance_appraisal_detail_pivot</field>
+        <field name="model">employee.performance.appraisal.details</field>
+        <field name="arch" type="xml">
+            <pivot string="Indicator Analysis" >
+                <field name="employee_id" type="row"/>
+                <field name="indicator_id" type="row"/>
+                <field name="score" type="measure"/>
+                <field name="conceptual_score" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+     <record model="ir.ui.view" id="view_performance_appraisal_detail_form" >
+            <field name="name">performance.appraisal.form</field>
+            <field name="model">employee.performance.appraisal.details</field>
+            <field name="arch" type="xml">
+                <form string="Appraisal">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="performance_appraisal.group_performance_appraisal_manager"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="employee_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="employee_id" placeholder="Employee's Name" required="True"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="job_title"/>
+                                <field name="department_id"/>
+                                <field name="strategy_id"/>
+                            </group>
+                            <group>
+                                <field name="reviewer_id"/>
+                                <field name="date"/>
+                                <field name="conceptual_score" />
+                                <field name="score" />
+                            </group>
+                        </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+     </record>
+
+    <record model="ir.actions.act_window" id="open_view_performance_appraisal_detail_tree">
+        <field name="name">Indicator Analysis</field>
+        <field name="res_model">employee.performance.appraisal.details</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">pivot,tree,form</field>
+        <field name="view_ids"
+           eval="[(5, 0, 0),
+                  (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_performance_appraisal_detail_pivot')}),
+                  (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_appraisal_detail_list')}),
+                  (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_appraisal_detail_form')})]"/>
+        <field name="search_view_id" ref="performance_appraisal_search_view"/>
+    </record>
+
+    <menuitem id="menu_performance_appraisal_detail" name="Indicator Analysis" parent="menu_main_performance_appraisal"
+              action="open_view_performance_appraisal_detail_tree" sequence="5" />
+
+</odoo>

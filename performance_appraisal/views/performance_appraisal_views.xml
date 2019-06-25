@@ -18,7 +18,7 @@
         <field name="name">performance.appraisal.list</field>
         <field name="model">employee.performance.appraisal</field>
         <field name="arch" type="xml">
-            <tree string="Performance Strategies" toolbar="1" >
+            <tree string="Appraisals" toolbar="1" >
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="job_title"/>
@@ -28,6 +28,18 @@
                 <field name="auto_score"/>
                 <field name="summary" />
             </tree>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_performance_appraisal_pivot">
+        <field name="name">view_performance_appraisal_pivot</field>
+        <field name="model">employee.performance.appraisal</field>
+        <field name="arch" type="xml">
+            <pivot string="Appraisal Analysis" >
+                <field name="employee_id" type="row"/>
+                <field name="date" type="col"/>
+                <field name="score_compute" type="measure"/>
+            </pivot>
         </field>
     </record>
 
@@ -74,9 +86,9 @@
                         <notebook>
                             <page name="indicator" string="Evaluation Details" attrs="{'invisible': [('auto_score', '=', False)]}" >
                                 <field name="appraisal_details_ids">
-                                    <tree>
+                                    <tree editable="bottom" create="false" delete="false">
                                         <field name="indicator_id"/>
-                                        <field name="rating_guide" string="Rating Guide"/>
+                                        <field name="rating_guide" string="Description"/>
                                         <field name="value_id" string="Rate"/>
                                         <field name="weight" widget="integer" invisible="1"/>
                                         <field name="score" sum="Total" widget="integer"/>
@@ -102,10 +114,11 @@
         <field name="name">Review appraisal</field>
         <field name="res_model">employee.performance.appraisal</field>
         <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,pivot,form</field>
         <field name="view_ids"
            eval="[(5, 0, 0),
                   (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_appraisal_list')}),
+                  (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_performance_appraisal_pivot')}),
                   (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_appraisal_form')})]"/>
         <field name="search_view_id" ref="performance_appraisal_search_view"/>
     </record>

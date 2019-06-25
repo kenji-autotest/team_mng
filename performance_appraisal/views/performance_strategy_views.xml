@@ -59,7 +59,7 @@
                         <notebook>
                             <page name="indicator" string="Indicator">
                                 <field name="indicator_ids" >
-                                    <tree editable="top">
+                                    <tree editable="bottom">
                                         <field name="indicator_id"/>
                                         <field name="weight" sum="Total" widget="integer"/>
                                     </tree>

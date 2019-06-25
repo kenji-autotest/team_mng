@@ -24,6 +24,7 @@
         'views/performance_indicator_rate_views.xml',
         'views/employee_views.xml',
         'views/performance_appraisal_views.xml',
+        'views/performance_appraisal_details_views.xml',
     ],
     'qweb': [],
     'demo': [],

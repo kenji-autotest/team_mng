@@ -128,6 +128,18 @@ class IFIEmployeePerformance(models.Model):
     active = fields.Boolean(default=True)
     private_access = fields.Boolean(compute='compute_private_access')
 
+    @api.depends('general', 'improvement_points', 'score_compute')
+    def _compute_summary(self):
+        for r in self:
+            summary = ''
+            if r.general:
+                summary += 'General: ' + r.general + '\n'
+            if r.improvement_points:
+                summary += 'Improvement points: ' + r.improvement_points + '\n'
+            if r.next_objectives:
+                summary += 'Orientation: ' + r.next_objectives
+            r.summary = summary
+
     def compute_private_access(self):
         current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
         is_manager = self.env.user.has_group('performance_appraisal.group_performance_appraisal_manager')
@@ -180,7 +192,7 @@ class IFIEmployeePerformanceDetails(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     appraisal_id = fields.Many2one('employee.performance.appraisal', string='Appraisal', required=True,
-                                   track_visibility='onchange')
+                                   track_visibility='onchange', ondelete='cascade')
     employee_id = fields.Many2one('hr.employee', string='Employee', related='appraisal_id.employee_id',
                                   track_visibility='onchange', store=True)
     department_id = fields.Many2one('hr.department', string='Department', related='appraisal_id.department_id',
@@ -190,8 +202,9 @@ class IFIEmployeePerformanceDetails(models.Model):
     date = fields.Date(string='Appraisal Date', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', related='appraisal_id.strategy_id', store=True)
     indicator_id = fields.Many2one('performance.indicator')
-    rating_guide = fields.Text(string="Guide", related='indicator_id.description', store=True)
+    rating_guide = fields.Text(string="Description", related='indicator_id.description', store=True)
     value_id = fields.Many2one('indicator.value', string="Score")
+    conceptual_score = fields.Float(related='value_id.conceptual_score', store=True, string='Rate')
     weight = fields.Float(compute='_compute_weight', store=True)
     score = fields.Float(compute='_compute_score', store=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
