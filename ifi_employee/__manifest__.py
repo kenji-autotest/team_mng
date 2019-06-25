@@ -20,7 +20,7 @@
 #################################################################################
 
 {
-    'name': "Employees",
+    'name': "IFI Employees",
     'author': 'IFI Solution',
     'category': 'Human Resources',
     'summary': """Display more info on Employee form and add new group Department Manager""",

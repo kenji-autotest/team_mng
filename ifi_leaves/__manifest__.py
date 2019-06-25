@@ -8,7 +8,7 @@
     'description': """
 Allows multiple managers to approve Leave
 """,
-    'depends': ['hr_holidays, ifi_employee'],
+    'depends': ['hr_holidays', 'ifi_employee'],
     'data': [],
     'demo': [],
     'installable': True,
