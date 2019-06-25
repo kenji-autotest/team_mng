@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="performance_indicator_search_view">
+            <field name="name">Indicator</field>
+            <field name="model">performance.indicator</field>
+            <field name="arch" type="xml">
+                <search string="Indicator">
+                    <field name="name"/>
+                </search>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_performance_indicator_list">
+        <field name="name">performance.indicator.list</field>
+        <field name="model">performance.indicator</field>
+        <field name="arch" type="xml">
+            <tree string="Indicators" toolbar="1" >
+                <field name="name"/>
+                <field name="value_ids"/>
+                <field name="rating_guide"/>
+                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+     <record model="ir.ui.view" id="view_performance_indicator_form" >
+            <field name="name">performance.indicator.form</field>
+            <field name="model">performance.indicator</field>
+            <field name="arch" type="xml">
+                <form string="Indicator">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="performance_appraisal.group_performance_appraisal_manager"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="Indicator's Name" required="True"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <field name="description" />
+                            <field name="value_ids" />
+                            <field name="rating_guide" />
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        </group>
+
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+     </record>
+
+    <record model="ir.actions.act_window" id="open_view_performance_indicator_tree">
+        <field name="name">Indicator</field>
+        <field name="res_model">performance.indicator</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_indicator_list')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_indicator_form')})]"/>
+        <field name="search_view_id" ref="performance_indicator_search_view"/>
+    </record>
+
+    <menuitem id="menu_strategy_performance_indicator_config" name="Indicator" parent="menu_performance_appraisal_config"
+        sequence="15" groups="group_performance_appraisal_manager" action="open_view_performance_indicator_tree"/>
+
+</odoo>

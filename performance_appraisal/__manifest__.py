@@ -18,8 +18,11 @@
     'data': [
         'security/performance_appraisal_security.xml',
         'security/ir.model.access.csv',
-        'views/performance_appraisal_menu.xml',
+        'views/menu.xml',
         'views/performance_strategy_views.xml',
+        'views/performance_indicator_views.xml',
+        'views/performance_indicator_values_views.xml',
+        'views/performance_appraisal_views.xml',
     ],
     'qweb': [],
     'demo': [],

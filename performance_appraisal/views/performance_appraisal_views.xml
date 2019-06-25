@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="performance_appraisal_search_view">
+            <field name="name">appraisal.search</field>
+            <field name="model">employee.performance.appraisal</field>
+            <field name="arch" type="xml">
+                <search string="appraisal">
+                    <field name="employee_id"/>
+                    <field name="department_id"/>
+                    <field name="job_title"/>
+                    <field name="reviewer_id"/>
+                </search>
+            </field>
+    </record>
+
+    <record model="ir.ui.view" id="view_performance_appraisal_list">
+        <field name="name">performance.appraisal.list</field>
+        <field name="model">employee.performance.appraisal</field>
+        <field name="arch" type="xml">
+            <tree string="Performance Strategies" toolbar="1" >
+                <field name="date"/>
+                <field name="employee_id"/>
+                <field name="job_title"/>
+                <field name="department_id"/>
+                <field name="reviewer_id" />
+                <field name="state"/>
+                <field name="auto_score"/>
+                <field name="summary" />
+            </tree>
+        </field>
+    </record>
+
+     <record model="ir.ui.view" id="view_performance_appraisal_form" >
+            <field name="name">performance.appraisal.form</field>
+            <field name="model">employee.performance.appraisal</field>
+            <field name="arch" type="xml">
+                <form string="Appraisal">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="toggle_active" type="object" groups="performance_appraisal.group_performance_appraisal_manager"
+                                    class="oe_stat_button" icon="fa-archive">
+                                <field name="active" widget="boolean_button"
+                                    options='{"terminology": "archive"}'/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <label for="employee_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="employee_id" placeholder="Employee's Name" required="True"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="job_title"/>
+                                <field name="department_id"/>
+                                <field name="strategy_id"/>
+                                <field name="auto_score" invisible="1"/>
+                            </group>
+                            <group>
+                                <field name="reviewer_id"/>
+                                <field name="date"/>
+                                <field name="start_date"/>
+                                <field name="expired_date"/>
+                                <field name="score_compute" attrs="{'invisible': [('auto_score', '=', False)]}"/>
+                                <field name="score_tmp" attrs="{'invisible': [('auto_score', '=', True)]}" string="Score"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="general"/>
+                            <field name="improvement_points"/>
+                            <field name="next_objectives"/>
+                        </group>
+                        <notebook>
+                            <page name="indicator" string="Evaluation Details" attrs="{'invisible': [('auto_score', '=', False)]}" >
+                                <field name="appraisal_details_ids">
+                                    <tree editable="top">
+                                        <field name="indicator_id"/>
+                                        <field name="rating_guide" string="Rating Guide"/>
+                                        <field name="value_id" string="Rate"/>
+                                        <field name="weight" widget="integer"/>
+                                        <field name="score" sum="Total" widget="integer"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <field name="private_access" invisible="1"/>
+                            <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
+                                <field name="private_note" />
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+     </record>
+
+    <record model="ir.actions.act_window" id="open_view_performance_appraisal_tree">
+        <field name="name">Review appraisal</field>
+        <field name="res_model">employee.performance.appraisal</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_ids"
+           eval="[(5, 0, 0),
+                  (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_appraisal_list')}),
+                  (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_appraisal_form')})]"/>
+        <field name="search_view_id" ref="performance_appraisal_search_view"/>
+    </record>
+
+    <menuitem id="menu_performance_appraisal" name="Appraisal" parent="menu_main_performance_appraisal"
+              action="open_view_performance_appraisal_tree" sequence="1" />
+
+</odoo>

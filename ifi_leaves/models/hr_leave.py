@@ -24,9 +24,9 @@ class IFIEmployeeLeave(models.Model):
             if holiday.can_approve:
                 continue
             if self.user_has_groups('ifi_employee.group_hr_department_manager', 'ifi_employee.group_hr_department_vice'):
-                if self.user.employee_id and self.user.employee_id.department_id \
+                if self.user.employee_ids and self.user.employee_ids[0].department_id \
                         and holiday.employee_id.department_id \
-                        and self.user.employee_id.department_id == holiday.employee_id.department_id:
+                        and self.user.employee_ids[0].department_id == holiday.employee_id.department_id:
                     holiday.can_approve = True
 
     # @api.multi

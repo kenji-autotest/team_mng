@@ -60,8 +60,8 @@
             <field name="name">Appraisal: employees: see own</field>
             <field name="model_id" ref="model_employee_performance_appraisal"/>
             <field name="domain_force">['|',
-                                            ('employee_id', '=', user.employee_id.id),
-                                            ('reviewer_id', '=', user.employee_id.id)
+                                            ('employee_id', 'in', user.employee_ids.ids),
+                                            ('reviewer_id', 'in', user.employee_ids.ids)
                                         ]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>

@@ -3,7 +3,7 @@
  <!-- Top menu item -->
     <menuitem name="Appraisal" web_icon="performance_appraisal,static/description/icon.png"
         id="menu_main_performance_appraisal" groups="base.group_user"
-        sequence="20"/>
+        sequence="2"/>
 
     <menuitem id="menu_performance_appraisal_config" name="Configuration" parent="menu_main_performance_appraisal"
         sequence="100" groups="performance_appraisal.group_performance_appraisal_manager,performance_appraisal.group_performance_appraisal_readall"/>

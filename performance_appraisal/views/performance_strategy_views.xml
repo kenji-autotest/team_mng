@@ -45,20 +45,29 @@
                                 <field name="name" placeholder="Strategy's Name" required="True"/>
                             </h1>
                         </div>
+                        <group>
+                            <group>
+                                <field name="approval_id"/>
+                            </group>
+                            <group>
+                                <field name="interval"/>
+                                <field name="auto_score"/>
+                            </group>
+                            <field name="description" placeholder="Description"/>
+                        </group>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         <notebook>
                             <page name="indicator" string="Indicator">
-                                <field name="indicator_ids" nolabel="1">
+                                <field name="indicator_ids" >
                                     <tree editable="top">
                                         <field name="indicator_id"/>
-                                        <field name="value_ids" invisible="1"/>
-                                        <field name="value_guide" invisible="1"/>
-                                        <field name="weight"/>
+                                        <field name="weight" sum="Total" widget="integer"/>
                                     </tree>
                                 </field>
                             </page>
                             <page name="employee" string="Employees">
                                 <field name="employee_ids" nolabel="1">
-                                    <tree editable="top" create="0">
+                                    <tree editable="top">
                                         <field name="name"/>
                                         <field name="department_id"/>
                                         <field name="job_title"/>
@@ -79,13 +88,17 @@
     <record model="ir.actions.act_window" id="open_view_performance_strategy_tree">
         <field name="name">Review Strategy</field>
         <field name="res_model">performance.strategy</field>
-        <field name="view_type">tree</field>
+        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
+        <field name="view_ids"
+                   eval="[(5, 0, 0),
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_strategy_list')}),
+                          (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_strategy_form')})]"/>
         <field name="view_id" ref="view_performance_strategy_list"/>
         <field name="search_view_id" ref="performance_strategy_search_view"/>
     </record>
 
     <menuitem id="menu_strategy_performance_appraisal_config" name="Strategy" parent="menu_performance_appraisal_config"
-        sequence="10" groups="group_performance_appraisal_manager"/>
+        sequence="10" groups="group_performance_appraisal_manager" action="open_view_performance_strategy_tree"/>
 
 </odoo>
