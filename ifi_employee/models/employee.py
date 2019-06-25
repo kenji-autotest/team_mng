@@ -27,4 +27,5 @@ class IFIEmployee(models.Model):
     _inherit = "hr.employee"
 
     skype = fields.Char(string='Skype')
+    job_title = fields.Char("Job Title", required=True)
 

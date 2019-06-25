@@ -74,11 +74,11 @@
                         <notebook>
                             <page name="indicator" string="Evaluation Details" attrs="{'invisible': [('auto_score', '=', False)]}" >
                                 <field name="appraisal_details_ids">
-                                    <tree editable="top">
+                                    <tree>
                                         <field name="indicator_id"/>
                                         <field name="rating_guide" string="Rating Guide"/>
                                         <field name="value_id" string="Rate"/>
-                                        <field name="weight" widget="integer"/>
+                                        <field name="weight" widget="integer" invisible="1"/>
                                         <field name="score" sum="Total" widget="integer"/>
                                     </tree>
                                 </field>

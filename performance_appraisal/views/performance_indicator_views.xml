@@ -18,7 +18,7 @@
             <tree string="Indicators" toolbar="1" >
                 <field name="name"/>
                 <field name="value_ids"/>
-                <field name="rating_guide"/>
+                <field name="description"/>
                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -46,7 +46,6 @@
                         <group>
                             <field name="description" />
                             <field name="value_ids" />
-                            <field name="rating_guide" />
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                         </group>
 
@@ -72,7 +71,7 @@
         <field name="search_view_id" ref="performance_indicator_search_view"/>
     </record>
 
-    <menuitem id="menu_strategy_performance_indicator_config" name="Indicator" parent="menu_performance_appraisal_config"
+    <menuitem id="menu_strategy_performance_indicator_config" name="Indicators" parent="menu_performance_appraisal_config"
         sequence="15" groups="group_performance_appraisal_manager" action="open_view_performance_indicator_tree"/>
 
 </odoo>

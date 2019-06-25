@@ -98,7 +98,7 @@
         <field name="search_view_id" ref="performance_strategy_search_view"/>
     </record>
 
-    <menuitem id="menu_strategy_performance_appraisal_config" name="Strategy" parent="menu_performance_appraisal_config"
+    <menuitem id="menu_strategy_performance_appraisal_config" name="Strategies" parent="menu_performance_appraisal_config"
         sequence="10" groups="group_performance_appraisal_manager" action="open_view_performance_strategy_tree"/>
 
 </odoo>

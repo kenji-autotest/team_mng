@@ -75,17 +75,8 @@ class IFIPerformanceIndicator(models.Model):
     description = fields.Text()
     value_ids = fields.Many2many('indicator.value', 'performance_indicator_value_rel', 'indicator_id', 'value_id',
                                  string="Values")
-    rating_guide = fields.Text(string="Guide", compute='_compute_rating_guide', store=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
-
-    @api.depends('value_ids')
-    def _compute_rating_guide(self):
-        for r in self:
-            text = ''
-            for i in r.value_ids:
-                text += '- ' + i.code + ' | ' + i.name + ': ' + i.description if i.description else '' + '\n'
-            r.rating_guide = text
 
 
 class IFIPerformanceIndicatorValues(models.Model):
@@ -114,9 +105,9 @@ class IFIEmployeePerformance(models.Model):
                                     track_visibility='onchange')
     job_title = fields.Char("Job Title", compute='_compute_department_id', store=True, track_visibility='onchange')
     reviewer_id = fields.Many2one('hr.employee', string='Reviewer', required=True)
-    date = fields.Date(string='Appraisal Date', track_visibility='onchange')
+    date = fields.Date(string='Appraisal Date', track_visibility='onchange', required=True)
     start_date = fields.Date(string='Start Date', track_visibility='onchange')
-    expired_date = fields.Date(string='Deadline', track_visibility='onchange')
+    expired_date = fields.Date(string='Deadline', track_visibility='onchange', required=True)
     state = fields.Selection([('new', 'New'),
                               ('in_progress', 'In Progress'),
                               ('done', 'Done')], string="State", default='new', compute='_compute_state', store=True,
@@ -167,6 +158,21 @@ class IFIEmployeePerformance(models.Model):
             else:
                 r.score_compute = r.score_tmp
 
+    @api.model
+    def create(self, vals):
+        res = super(IFIEmployeePerformance, self).create(vals)
+        if not vals.get('appraisal_details_ids', False):
+            for r in res.strategy_id.indicator_ids:
+                self.env['employee.performance.appraisal.details'].create({'appraisal_id': res.id,
+                                                                           'employee_id': res.employee_id.id,
+                                                                           'department_id': res.department_id.id,
+                                                                           'job_title': res.job_title,
+                                                                           'reviewer_id': res.reviewer_id.id,
+                                                                           'date': res.date,
+                                                                           'strategy_id': res.strategy_id.id,
+                                                                           'indicator_id': r.indicator_id.id})
+        return res
+
 
 class IFIEmployeePerformanceDetails(models.Model):
     _name = "employee.performance.appraisal.details"
@@ -184,7 +190,7 @@ class IFIEmployeePerformanceDetails(models.Model):
     date = fields.Date(string='Appraisal Date', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', related='appraisal_id.strategy_id', store=True)
     indicator_id = fields.Many2one('performance.indicator')
-    rating_guide = fields.Text(string="Guide", related='indicator_id.rating_guide', readonly=True)
+    rating_guide = fields.Text(string="Guide", related='indicator_id.description', store=True)
     value_id = fields.Many2one('indicator.value', string="Score")
     weight = fields.Float(compute='_compute_weight', store=True)
     score = fields.Float(compute='_compute_score', store=True)
@@ -214,6 +220,7 @@ class IFIEmployeePerformanceDetails(models.Model):
         return {'domain': {'value_id': [
             ('id', 'in', self.indicator_id.value_ids.ids)
         ]}}
+
 
 
 
