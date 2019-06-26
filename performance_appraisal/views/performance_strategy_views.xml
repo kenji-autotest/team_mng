@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
+    <record id="indicator_weigh_form" model="ir.ui.view">
+        <field name="name">indicator.weigh.form</field>
+        <field name="model">indicator.weigh</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="indicator_id" />
+                        <field name="strategy_id"/>
+                        <field name="weight"/>
+                        <field name="note"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
     <record model="ir.ui.view" id="performance_strategy_search_view">
             <field name="name">Strategy</field>
             <field name="model">performance.strategy</field>

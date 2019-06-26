@@ -38,7 +38,7 @@
             <pivot string="Appraisal Analysis" >
                 <field name="employee_id" type="row"/>
                 <field name="date" type="col"/>
-                <field name="score" type="measure"/>
+                <field name="score" type="measure" />
             </pivot>
         </field>
     </record>

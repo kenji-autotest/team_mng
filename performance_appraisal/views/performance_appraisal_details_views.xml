@@ -26,7 +26,7 @@
                 <field name="department_id"/>
                 <field name="reviewer_id" />
                 <field name="indicator_id"/>
-                <field name="value_id"/>
+                <field name="value_id" options="{'no_create': True}"/>
                 <field name="score" />
             </tree>
         </field>
@@ -73,6 +73,8 @@
                             <group>
                                 <field name="reviewer_id"/>
                                 <field name="date"/>
+                                <field name="indicator_id"/>
+                                <field name="value_id" string="Rate" options="{'no_create': True}" domain="[('indicator_id', '=', [indicator_id])]"/>
                                 <field name="conceptual_score" />
                                 <field name="score" />
                             </group>

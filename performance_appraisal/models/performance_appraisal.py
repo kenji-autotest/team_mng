@@ -26,12 +26,12 @@ class IFIEmployeeAppraisalSummary(models.Model):
                               ('submitted', 'Submitted')
                               ], string="State", default='draft', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
-    recommended_score = fields.Boolean(compute='_compute_recommended_score', string='Reviews Score(avg)', store=True,
-                                       track_visibility='onchange')
+    recommended_score = fields.Float(compute='_compute_recommended_score', string='Avg score', store=True,
+                                       track_visibility='onchange', group_operator="avg")
     general = fields.Text(track_visibility='onchange')
     improvement_points = fields.Text(track_visibility='onchange')
     next_objectives = fields.Text(track_visibility='onchange')
-    score = fields.Float(string='Score', track_visibility='onchange')
+    score = fields.Float(string='Score', track_visibility='onchange', group_operator="avg")
     private_note = fields.Text(string="Private Note")
     private_note_reviews = fields.Text(compute='_compute_recommended_score', track_visibility='onchange', store=True)
     summary = fields.Text(compute='_compute_summary', store=True, track_visibility='onchange')
@@ -90,7 +90,7 @@ class IFIEmployeeAppraisalSummary(models.Model):
             for i in r.appraisal_ids:
                 score += i.score if i.score else score
                 private_note_reviews += i.private_note if i.private_note else ''
-            r.score = score / len(r.appraisal_ids) if r.appraisal_ids else score
+            r.recommended_score = score / len(r.appraisal_ids) if r.appraisal_ids else score
             r.private_note_reviews = private_note_reviews
 
     @api.one
@@ -126,7 +126,8 @@ class IFIEmployeePerformance(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'employee_id'
 
-    appraisal_summary_id = fields.Many2one('employee.appraisal.summary', string='Appraisal', track_visibility='onchange')
+    appraisal_summary_id = fields.Many2one('employee.appraisal.summary', string='Appraisal',
+                                           track_visibility='onchange', ondelete='restrict')
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Department', compute='_compute_department_id', store=True,
                                     track_visibility='onchange')
@@ -143,7 +144,7 @@ class IFIEmployeePerformance(models.Model):
     general = fields.Text(track_visibility='onchange')
     score = fields.Float(string='Score', compute='compute_score', store=True, group_operator="avg",
                          track_visibility='onchange')
-    score_tmp = fields.Float(string='Score(manual)', track_visibility='onchange')
+    score_tmp = fields.Float(string='Score(manual)', track_visibility='onchange', group_operator="avg")
     private_note = fields.Text(string="Private Note")
     appraisal_details_ids = fields.One2many('employee.performance.appraisal.details', 'appraisal_id',
                                             string="Appraisal Details", track_visibility='onchange')
@@ -229,10 +230,10 @@ class IFIEmployeePerformanceDetails(models.Model):
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', related='appraisal_id.strategy_id', store=True)
     indicator_id = fields.Many2one('performance.indicator')
     rating_guide = fields.Text(string="Description", related='indicator_id.description', store=True)
-    value_id = fields.Many2one('indicator.value', string="Score")
-    conceptual_score = fields.Float(related='value_id.conceptual_score', store=True, string='Rate')
-    weight = fields.Float(compute='_compute_weight', store=True)
-    score = fields.Float(compute='_compute_score', store=True)
+    value_id = fields.Many2one('indicator.value', string="Rate")
+    conceptual_score = fields.Float(related='value_id.conceptual_score', store=True, string='Rate', group_operator="avg")
+    weight = fields.Float(compute='_compute_weight', store=True, group_operator="max")
+    score = fields.Float(compute='_compute_score', store=True, group_operator="avg")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
 
@@ -252,13 +253,13 @@ class IFIEmployeePerformanceDetails(models.Model):
             if r.weight and r.value_id:
                 r.score = r.weight * r.value_id.conceptual_score / 100
 
-    @api.onchange('indicator_id')
-    def onchange_indicator_id(self):
-        if not self.indicator_id:
-            return {}
-        return {'domain': {'value_id': [
-            ('id', 'in', self.indicator_id.value_ids.ids)
-        ]}}
+    # @api.onchange('indicator_id')
+    # def onchange_indicator_id(self):
+    #     if not self.indicator_id:
+    #         return {}
+    #     return {'domain': {'value_id': [
+    #         ('id', 'in', self.indicator_id.value_ids.ids)
+    #     ]}}
 
 
 
