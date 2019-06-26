@@ -18,11 +18,12 @@
     'data': [
         'security/performance_appraisal_security.xml',
         'security/ir.model.access.csv',
-        'views/menu.xml',
+        'views/appraisal_menu.xml',
         'views/performance_strategy_views.xml',
         'views/performance_indicator_views.xml',
         'views/performance_indicator_rate_views.xml',
         'views/employee_views.xml',
+        'views/performance_appraisal_summary_views.xml',
         'views/performance_appraisal_views.xml',
         'views/performance_appraisal_details_views.xml',
     ],

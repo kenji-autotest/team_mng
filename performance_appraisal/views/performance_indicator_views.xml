@@ -48,7 +48,7 @@
                             <field name="value_ids">
                                 <tree>
                                     <field name="name"/>
-                                    <field name="code"/>
+                                    <field name="conceptual_score"/>
                                     <field name="description"/>
                                 </tree>
                             </field>
@@ -78,6 +78,8 @@
     </record>
 
     <menuitem id="menu_strategy_performance_indicator_config" name="Indicators" parent="menu_performance_appraisal_config"
-        sequence="15" groups="group_performance_appraisal_manager" action="open_view_performance_indicator_tree"/>
+              sequence="15" action="open_view_performance_indicator_tree"
+              groups="performance_appraisal.group_performance_appraisal_manager,performance_appraisal.group_performance_appraisal_user,performance_appraisal.group_performance_appraisal_readall"
+              />
 
 </odoo>

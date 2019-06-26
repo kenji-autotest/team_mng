@@ -2,4 +2,5 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from . import employee
+from . import appraisal_settings
 from . import performance_appraisal

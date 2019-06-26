@@ -31,6 +31,13 @@
             <field name="model">performance.strategy</field>
             <field name="arch" type="xml">
                 <form string="Strategy">
+                    <header>
+                        <button name="action_set_to_draft" string="Set to Draft" states="rejected,approved,submitted" type="object" class="oe_highlight" groups="performance_appraisal.group_performance_appraisal_manager"/>
+                        <button name="action_submit" string="Submit" states="draft" type="object" groups="performance_appraisal.group_performance_appraisal_manager,performance_appraisal.group_performance_appraisal_user"/>
+                        <button name="action_approve" string="Approve" states="submitted" type="object" class="oe_highlight" groups="performance_appraisal.group_performance_appraisal_manager"/>
+                        <button name="action_reject" string="Reject" states="submitted" type="object" groups="performance_appraisal.group_performance_appraisal_manager"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved"/>
+                    </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="toggle_active" type="object" groups="performance_appraisal.group_performance_appraisal_manager"
@@ -67,7 +74,7 @@
                             </page>
                             <page name="employee" string="Employees">
                                 <field name="employee_ids" nolabel="1">
-                                    <tree editable="top">
+                                    <tree>
                                         <field name="name"/>
                                         <field name="department_id"/>
                                         <field name="job_title"/>
@@ -99,6 +106,8 @@
     </record>
 
     <menuitem id="menu_strategy_performance_appraisal_config" name="Strategies" parent="menu_performance_appraisal_config"
-        sequence="10" groups="group_performance_appraisal_manager" action="open_view_performance_strategy_tree"/>
+              sequence="10" action="open_view_performance_strategy_tree"
+              groups="performance_appraisal.group_performance_appraisal_manager,performance_appraisal.group_performance_appraisal_user,performance_appraisal.group_performance_appraisal_readall"
+              />
 
 </odoo>

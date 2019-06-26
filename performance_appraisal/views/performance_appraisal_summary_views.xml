@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <record model="ir.ui.view" id="performance_appraisal_search_view">
-            <field name="name">appraisal.review.search</field>
-            <field name="model">employee.performance.appraisal</field>
+    <record model="ir.ui.view" id="performance_appraisal_summary_search_view">
+            <field name="name">appraisal.search</field>
+            <field name="model">employee.appraisal.summary</field>
             <field name="arch" type="xml">
-                <search string="Peer Reviews">
+                <search string="appraisal">
                     <field name="employee_id"/>
                     <field name="department_id"/>
                     <field name="job_title"/>
-                    <field name="reviewer_id"/>
+                    <field name="manager_id"/>
                 </search>
             </field>
     </record>
 
-    <record model="ir.ui.view" id="view_performance_appraisal_list">
-        <field name="name">performance.appraisal.list</field>
-        <field name="model">employee.performance.appraisal</field>
+    <record model="ir.ui.view" id="view_performance_appraisal_summary_list">
+        <field name="name">performance.appraisal.summary.list</field>
+        <field name="model">employee.appraisal.summary</field>
         <field name="arch" type="xml">
-            <tree string="Peer Reviews" toolbar="1" >
+            <tree string="Appraisals" toolbar="1" >
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="job_title"/>
                 <field name="department_id"/>
-                <field name="reviewer_id" />
+                <field name="manager_id" />
                 <field name="state"/>
-                <field name="auto_score"/>
-                <field name="general" />
+                <field name="score"/>
+                <field name="summary" />
             </tree>
         </field>
     </record>
 
-    <record model="ir.ui.view" id="view_performance_appraisal_pivot">
-        <field name="name">view_performance_appraisal_pivot</field>
-        <field name="model">employee.performance.appraisal</field>
+    <record model="ir.ui.view" id="view_performance_appraisal_summary_pivot">
+        <field name="name">view.performance.appraisal.summary.pivot</field>
+        <field name="model">employee.appraisal.summary</field>
         <field name="arch" type="xml">
             <pivot string="Appraisal Analysis" >
                 <field name="employee_id" type="row"/>
@@ -43,9 +43,9 @@
         </field>
     </record>
 
-     <record model="ir.ui.view" id="view_performance_appraisal_form" >
+     <record model="ir.ui.view" id="view_performance_appraisal_summary_form" >
             <field name="name">performance.appraisal.form</field>
-            <field name="model">employee.performance.appraisal</field>
+            <field name="model">employee.appraisal.summary</field>
             <field name="arch" type="xml">
                 <form string="Appraisal">
                      <header>
@@ -72,35 +72,33 @@
                                 <field name="job_title"/>
                                 <field name="department_id"/>
                                 <field name="strategy_id"/>
-                                <field name="auto_score" invisible="1"/>
+                                <field name="manager_id"/>
+                                <field name="recommended_score"/>
                             </group>
                             <group>
-                                <field name="reviewer_id"/>
                                 <field name="date"/>
-                                <field name="start_date"/>
                                 <field name="expired_date"/>
-                                <field name="score" attrs="{'invisible': [('auto_score', '=', False)]}"/>
-                                <field name="score_tmp" attrs="{'invisible': [('auto_score', '=', True)]}" string="Score"/>
+                                <field name="review_expired_date"/>
+                                <field name="score" />
                             </group>
                         </group>
                         <group>
                             <field name="general"/>
                         </group>
                         <notebook>
-                            <page name="indicator" string="Evaluation Details" attrs="{'invisible': [('auto_score', '=', False)]}" >
-                                <field name="appraisal_details_ids">
+                            <page name="peer_reviews" string="Peer Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
+                                <field name="appraisal_ids">
                                     <tree editable="bottom" create="false" delete="false">
-                                        <field name="indicator_id"/>
-                                        <field name="rating_guide" string="Description"/>
-                                        <field name="value_id" string="Rate"/>
-                                        <field name="weight" widget="integer" invisible="1"/>
-                                        <field name="score" sum="Total" widget="integer"/>
+                                        <field name="reviewer_id"/>
+                                        <field name="score" avg="Avg. Rate"/>
+                                        <field name="general"/>
                                     </tree>
                                 </field>
                             </page>
                             <field name="private_access" invisible="1"/>
                             <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
                                 <field name="private_note" />
+                                <field name="private_note_reviews" />
                             </page>
                         </notebook>
                     </sheet>
@@ -113,20 +111,20 @@
             </field>
      </record>
 
-    <record model="ir.actions.act_window" id="open_view_performance_appraisal_tree">
-        <field name="name">Appraisal Peer Review</field>
-        <field name="res_model">employee.performance.appraisal</field>
+    <record model="ir.actions.act_window" id="open_view_performance_appraisal_summary_tree">
+        <field name="name">Appraisal</field>
+        <field name="res_model">employee.appraisal.summary</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,pivot,form</field>
         <field name="view_ids"
            eval="[(5, 0, 0),
-                  (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_appraisal_list')}),
-                  (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_performance_appraisal_pivot')}),
-                  (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_appraisal_form')})]"/>
-        <field name="search_view_id" ref="performance_appraisal_search_view"/>
+                  (0, 0, {'view_mode': 'tree', 'view_id': ref('view_performance_appraisal_summary_list')}),
+                  (0, 0, {'view_mode': 'pivot', 'view_id': ref('view_performance_appraisal_summary_pivot')}),
+                  (0, 0, {'view_mode': 'form', 'view_id': ref('view_performance_appraisal_summary_form')})]"/>
+        <field name="search_view_id" ref="performance_appraisal_summary_search_view"/>
     </record>
 
-    <menuitem id="menu_performance_appraisal" name="Peer Review" parent="menu_main_performance_appraisal"
-              action="open_view_performance_appraisal_tree" sequence="2" />
+    <menuitem id="menu_performance_appraisal_summary" name="Appraisal" parent="menu_main_performance_appraisal"
+              action="open_view_performance_appraisal_summary_tree" sequence="1" />
 
 </odoo>

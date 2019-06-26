@@ -8,127 +8,44 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
-class IFIPerformanceStrategy(models.Model):
-    _name = "performance.strategy"
-    _description = "Performance Strategy"
+class IFIEmployeeAppraisalSummary(models.Model):
+    _name = "employee.appraisal.summary"
+    _description = "Employee Performance Appraisal Summary"
     _inherit = ['mail.thread', 'mail.activity.mixin']
-
-    name = fields.Char(required=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    description = fields.Text()
-    approval_id = fields.Many2one('hr.employee', string="Approved By")
-    employee_ids = fields.Many2many('hr.employee', 'hr_employee_performance_strategy_rel', 'strategy_id',
-                                    'employee_id', string="Apply For")
-    indicator_ids = fields.One2many('indicator.weigh', 'strategy_id')
-    state = fields.Selection([
-        ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
-        ('approved', 'Approved'),
-        ('rejected', 'Rejected')
-    ], string='Status', readonly=True)
-    auto_score = fields.Boolean(string='Auto score?', default=True)
-    active = fields.Boolean(default=True)
-    interval = fields.Selection([
-        ('month', 'Monthly'),
-        ('semi-annual', 'Semi-Annual'),
-        ('annual', 'Annual'),
-    ], string='Interval', default="month")
-
-    _sql_constraints = [
-        ('name_uniq', 'unique (name)', "Strategy already exists!"),
-    ]
-
-    @api.one
-    def action_set_to_draft(self):
-        self.write({'state': 'draft'})
-
-    @api.one
-    def action_submit(self):
-        self.write({'state': 'submitted'})
-
-    @api.one
-    def action_approve(self):
-        self.write({'state': 'draft'})
-
-    @api.one
-    def action_rejected(self):
-        self.write({'state': 'rejected'})
-
-
-class IFIIndicatorWeighing(models.Model):
-    _name = 'indicator.weigh'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-
-    indicator_id = fields.Many2one('performance.indicator', string="Indicator", ondelete='restrict')
-    strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy')
-    weight = fields.Float("Weight(%)")
-    note = fields.Char()
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    active = fields.Boolean(default=True)
-
-
-class IFIPerformanceIndicator(models.Model):
-    _name = 'performance.indicator'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-
-    name = fields.Char()
-    description = fields.Text()
-    value_ids = fields.Many2many('indicator.value', 'performance_indicator_value_rel', 'indicator_id', 'value_id',
-                                 string="Values")
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    active = fields.Boolean(default=True)
-
-
-class IFIPerformanceIndicatorValues(models.Model):
-    _name = 'indicator.value'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'sequence'
-
-    indicator_id = fields.Many2many('performance.indicator', 'performance_indicator_value_rel', 'value_id', 'indicator_id',
-                                    string="Indicator")
-    sequence = fields.Integer(default=1, required=True)
-    name = fields.Char(required=True)
-    code = fields.Char(required=True)
-    description = fields.Text()
-    conceptual_score = fields.Float(required=True)
-    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
-    active = fields.Boolean(default=True)
-
-
-class IFIEmployeePerformance(models.Model):
-    _name = "employee.performance.appraisal"
-    _description = "Employee Performance Appraisal"
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'employee_id'
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Department', compute='_compute_department_id', store=True,
                                     track_visibility='onchange')
     job_title = fields.Char("Job Title", compute='_compute_department_id', store=True, track_visibility='onchange')
-    reviewer_id = fields.Many2one('hr.employee', string='Reviewer', required=True)
+    manager_id = fields.Many2one('hr.employee', string='Manager', required=True, compute='_compute_department_id')
     date = fields.Date(string='Appraisal Date', track_visibility='onchange', required=True)
-    start_date = fields.Date(string='Start Date', track_visibility='onchange')
     expired_date = fields.Date(string='Deadline', track_visibility='onchange', required=True)
-    state = fields.Selection([('new', 'New'),
-                              ('in_progress', 'In Progress'),
-                              ('done', 'Done')], string="State", default='new', compute='_compute_state', store=True,
-                             track_visibility='onchange')
+    review_expired_date = fields.Date(string='Peer Review Deadline', track_visibility='onchange', required=True)
+    state = fields.Selection([('draft', 'Draft'),
+                              ('submitted', 'Submitted')
+                              ], string="State", default='draft', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
-    auto_score = fields.Boolean(related='strategy_id.auto_score', store=True)
+    recommended_score = fields.Boolean(compute='_compute_recommended_score', string='Reviews Score(avg)', store=True,
+                                       track_visibility='onchange')
     general = fields.Text(track_visibility='onchange')
     improvement_points = fields.Text(track_visibility='onchange')
     next_objectives = fields.Text(track_visibility='onchange')
-    score_compute = fields.Float(string='Score', compute='compute_score', store=True, group_operator="avg",
-                                 track_visibility='onchange')
-    score_tmp = fields.Float(string='Score(manual)', track_visibility='onchange')
+    score = fields.Float(string='Score', track_visibility='onchange')
     private_note = fields.Text(string="Private Note")
+    private_note_reviews = fields.Text(compute='_compute_recommended_score', track_visibility='onchange', store=True)
     summary = fields.Text(compute='_compute_summary', store=True, track_visibility='onchange')
-    appraisal_details_ids = fields.One2many('employee.performance.appraisal.details', 'appraisal_id',
-                                            string="Appraisal Details", track_visibility='onchange')
+    appraisal_ids = fields.One2many('employee.performance.appraisal', 'appraisal_summary_id',
+                                    string="Appraisals", track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
     private_access = fields.Boolean(compute='compute_private_access')
 
-    @api.depends('general', 'improvement_points', 'score_compute')
+    _sql_constraints = [
+        ('key_uniq', 'unique (employee_id, strategy_id, date)', 'Appraisal be unique.')
+    ]
+
+    @api.depends('general', 'improvement_points', 'score')
     def _compute_summary(self):
         for r in self:
             summary = ''
@@ -153,6 +70,106 @@ class IFIEmployeePerformance(models.Model):
             elif is_dm or is_vice_dm:
                 if current_employee.department_id == r.department_id:
                     private_access = True
+            elif current_employee == r.manager_id or current_employee == r.employee_id.parent_id:
+                private_access = True
+            r.private_access = private_access
+
+    @api.depends('employee_id')
+    def _compute_department_id(self):
+        for r in self:
+            if r.employee_id:
+                r.update({'department_id': r.employee_id.department_id or False,
+                          'job_title': r.employee_id.job_title or False,
+                          'manager_id': r.employee_id.parent_id and r.employee_id.parent_id.id or False})
+
+    @api.depends('appraisal_ids.score','appraisal_ids.private_note')
+    def _compute_recommended_score(self):
+        for r in self:
+            private_note_reviews = ''
+            score = 0
+            for i in r.appraisal_ids:
+                score += i.score if i.score else score
+                private_note_reviews += i.private_note if i.private_note else ''
+            r.score = score / len(r.appraisal_ids) if r.appraisal_ids else score
+            r.private_note_reviews = private_note_reviews
+
+    @api.one
+    def action_set_to_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.one
+    def action_submit(self):
+        self.write({'state': 'submitted'})
+
+    @api.model
+    def create(self, vals):
+        res = super(IFIEmployeeAppraisalSummary, self).create(vals)
+        if not vals.get('appraisal_ids', False):
+            reviewer_setting_ids = self.env['employee.performance.reviewer'].search([('employee_id', '=', res.employee_id.id),
+                                                                                     ('strategy_id', '=', res.strategy_id.id),])
+            reviewer_ids = reviewer_setting_ids.mapped('reviewer_ids')
+            for r in reviewer_ids:
+                self.env['employee.performance.appraisal'].create({'appraisal_summary_id': res.id,
+                                                                   'employee_id': res.employee_id.id,
+                                                                   'department_id': res.department_id.id,
+                                                                   'job_title': res.job_title,
+                                                                   'reviewer_id': r.id,
+                                                                   'date': res.date,
+                                                                   'expired_date': res.review_expired_date,
+                                                                   'strategy_id': res.strategy_id.id})
+        return res
+
+
+class IFIEmployeePerformance(models.Model):
+    _name = "employee.performance.appraisal"
+    _description = "Employee Performance Appraisal"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'employee_id'
+
+    appraisal_summary_id = fields.Many2one('employee.appraisal.summary', string='Appraisal', track_visibility='onchange')
+    employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
+    department_id = fields.Many2one('hr.department', string='Department', compute='_compute_department_id', store=True,
+                                    track_visibility='onchange')
+    job_title = fields.Char("Job Title", compute='_compute_department_id', store=True, track_visibility='onchange')
+    reviewer_id = fields.Many2one('hr.employee', string='Reviewer', required=True)
+    date = fields.Date(string='Appraisal Date', track_visibility='onchange', required=True)
+    start_date = fields.Date(string='Start Date', track_visibility='onchange')
+    expired_date = fields.Date(string='Deadline', track_visibility='onchange', required=True)
+    state = fields.Selection([('draft', 'Draft'),
+                              ('submitted', 'Submitted')
+                              ], string="State", default='draft', track_visibility='onchange')
+    strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
+    auto_score = fields.Boolean(related='strategy_id.auto_score', store=True)
+    general = fields.Text(track_visibility='onchange')
+    score = fields.Float(string='Score', compute='compute_score', store=True, group_operator="avg",
+                         track_visibility='onchange')
+    score_tmp = fields.Float(string='Score(manual)', track_visibility='onchange')
+    private_note = fields.Text(string="Private Note")
+    appraisal_details_ids = fields.One2many('employee.performance.appraisal.details', 'appraisal_id',
+                                            string="Appraisal Details", track_visibility='onchange')
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    active = fields.Boolean(default=True)
+    private_access = fields.Boolean(compute='compute_private_access')
+
+    _sql_constraints = [
+        ('key_uniq', 'unique (employee_id, strategy_id, reviewer_id, date)', 'Appraisal be unique.')
+    ]
+
+    def compute_private_access(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        is_manager = self.env.user.has_group('performance_appraisal.group_performance_appraisal_manager')
+        is_readall = self.env.user.has_group('performance_appraisal.group_performance_appraisal_readall')
+        is_dm = self.env.user.has_group('ifi_employee.group_hr_department_manager')
+        is_vice_dm = self.env.user.has_group('ifi_employee.group_hr_department_vice')
+        for r in self:
+            private_access = False
+            if is_manager or is_readall:
+                private_access = True
+            elif is_dm or is_vice_dm:
+                if current_employee.department_id == r.department_id:
+                    private_access = True
+            elif current_employee == r.reviewer_id or current_employee == r.employee_id.parent_id:
+                private_access = True
             r.private_access = private_access
 
     @api.depends('employee_id')
@@ -166,9 +183,17 @@ class IFIEmployeePerformance(models.Model):
     def compute_score(self):
         for r in self:
             if r.auto_score:
-                r.score_compute = sum([i.score for i in r.appraisal_details_ids if i.score])
+                r.score = sum([i.score for i in r.appraisal_details_ids if i.score])
             else:
-                r.score_compute = r.score_tmp
+                r.score = r.score_tmp
+
+    @api.one
+    def action_set_to_draft(self):
+        self.write({'state': 'draft'})
+
+    @api.one
+    def action_submit(self):
+        self.write({'state': 'submitted'})
 
     @api.model
     def create(self, vals):
@@ -190,6 +215,7 @@ class IFIEmployeePerformanceDetails(models.Model):
     _name = "employee.performance.appraisal.details"
     _description = "Employee Performance Appraisal"
     _inherit = ['mail.thread', 'mail.activity.mixin']
+    _rec_name = 'employee_id'
 
     appraisal_id = fields.Many2one('employee.performance.appraisal', string='Appraisal', required=True,
                                    track_visibility='onchange', ondelete='cascade')
