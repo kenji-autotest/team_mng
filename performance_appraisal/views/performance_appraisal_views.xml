@@ -75,21 +75,21 @@
                                 <field name="auto_score" invisible="1"/>
                             </group>
                             <group>
-                                <field name="reviewer_id"/>
-                                <field name="date"/>
-                                <field name="start_date"/>
-                                <field name="expired_date"/>
+                                <field name="reviewer_id" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                                <field name="date" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                                <field name="start_date" invisible="1"/>
+                                <field name="expired_date" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                                 <field name="score" attrs="{'invisible': [('auto_score', '=', False)]}"/>
                                 <field name="score_tmp" attrs="{'invisible': [('auto_score', '=', True)]}" string="Score"/>
                             </group>
                         </group>
                         <group>
-                            <field name="general"/>
+                            <field name="general" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                         </group>
                         <notebook>
                             <page name="indicator" string="Evaluation Details" attrs="{'invisible': [('auto_score', '=', False)]}" >
-                                <field name="appraisal_details_ids">
-                                    <tree editable="bottom" create="false" delete="false">
+                                <field name="appraisal_details_ids" attrs="{'readonly': [('state','!=', 'draft')]}">
+                                    <tree editable="bottom" create="false" delete="false" >
                                         <field name="indicator_id"/>
                                         <field name="rating_guide" string="Description"/>
                                         <field name="value_id" string="Rate" options="{'no_create': True}" domain="[('indicator_id', '=', [indicator_id])]"/>
@@ -100,7 +100,7 @@
                             </page>
                             <field name="private_access" invisible="1"/>
                             <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
-                                <field name="private_note" />
+                                <field name="private_note" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                             </page>
                         </notebook>
                     </sheet>

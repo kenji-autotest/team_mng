@@ -83,7 +83,9 @@
                             </group>
                         </group>
                         <group>
-                            <field name="general"/>
+                            <field name="general" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                            <field name="improvement_points" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                            <field name="next_objectives" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                         </group>
                         <notebook>
                             <page name="peer_reviews" string="Peer Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
