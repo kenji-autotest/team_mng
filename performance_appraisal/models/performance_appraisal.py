@@ -29,12 +29,12 @@ class IFIEmployeeAppraisalSummary(models.Model):
     recommended_score = fields.Float(compute='_compute_recommended_score', string='Avg score', store=True,
                                        track_visibility='onchange', group_operator="avg")
     general = fields.Text(string='General (*)', track_visibility='onchange')
-    improvement_points = fields.Text(track_visibility='onchange')
-    next_objectives = fields.Text(track_visibility='onchange')
+    improvement_points = fields.Text(track_visibility='onchange', string='Area of improvement')
+    next_objectives = fields.Text(track_visibility='onchange', string='Next Goals')
     score = fields.Float(string='Score', track_visibility='onchange', group_operator="avg")
     private_note = fields.Text(string="Private Note")
     private_note_reviews = fields.Text(compute='_compute_recommended_score', track_visibility='onchange', store=True)
-    summary = fields.Text(compute='_compute_summary', store=True, track_visibility='onchange')
+    summary = fields.Html(compute='_compute_summary', store=True, track_visibility='onchange')
     appraisal_ids = fields.One2many('employee.performance.appraisal', 'appraisal_summary_id',
                                     string="Appraisals", track_visibility='onchange')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
@@ -50,11 +50,11 @@ class IFIEmployeeAppraisalSummary(models.Model):
         for r in self:
             summary = ''
             if r.general:
-                summary += 'General: ' + r.general + '\n'
+                summary += '<b>- General: </b>' + r.general + '<br>'
             if r.improvement_points:
-                summary += 'Improvement points: ' + r.improvement_points + '\n'
+                summary += '<b>- Improvement points: </b>' + r.improvement_points + '<br>'
             if r.next_objectives:
-                summary += 'Orientation: ' + r.next_objectives
+                summary += '<b>- Orientation: </b>' + r.next_objectives
             r.summary = summary
 
     def compute_private_access(self):
