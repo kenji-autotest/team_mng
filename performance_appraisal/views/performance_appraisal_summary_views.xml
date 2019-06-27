@@ -88,7 +88,7 @@
                             <field name="next_objectives" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                         </group>
                         <notebook>
-                            <page name="peer_reviews" string="Peer Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
+                            <page name="peer_reviews" string="360 Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
                                 <field name="appraisal_ids">
                                     <tree editable="bottom" create="false" delete="false">
                                         <field name="reviewer_id" readonly="1"/>
