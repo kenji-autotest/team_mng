@@ -68,6 +68,16 @@ class IFIIndicatorWeighing(models.Model):
     active = fields.Boolean(default=True)
 
 
+class IFIIndicatorCategory(models.Model):
+    _name = 'performance.indicator.category'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    name = fields.Char()
+    description = fields.Text()
+    indicator_ids = fields.One2many('performance.indicator', 'category_id', string='Indicator')
+    active = fields.Boolean(default=True)
+
+
 class IFIPerformanceIndicator(models.Model):
     _name = 'performance.indicator'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -76,6 +86,7 @@ class IFIPerformanceIndicator(models.Model):
     description = fields.Text()
     value_ids = fields.One2many('indicator.value', 'indicator_id', string="Rates")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
+    category_id = fields.Many2one('performance.indicator.category', string='Category')
     active = fields.Boolean(default=True)
 
 

@@ -18,7 +18,7 @@
         <field name="name">performance.appraisal.list</field>
         <field name="model">employee.performance.appraisal</field>
         <field name="arch" type="xml">
-            <tree string="Peer Reviews" toolbar="1" >
+            <tree string="360 Reviews" toolbar="1" >
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="job_title"/>
@@ -64,14 +64,14 @@
                         <div class="oe_title">
                             <label for="employee_id" class="oe_edit_only"/>
                             <h1>
-                                <field name="employee_id" placeholder="Employee's Name" required="True"/>
+                                <field name="employee_id" placeholder="Employee's Name" required="True" readonly="1"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="job_title"/>
                                 <field name="department_id"/>
-                                <field name="strategy_id"/>
+                                <field name="strategy_id" readonly="1"/>
                                 <field name="auto_score" invisible="1"/>
                             </group>
                             <group>
@@ -114,7 +114,7 @@
      </record>
 
     <record model="ir.actions.act_window" id="open_view_performance_appraisal_tree">
-        <field name="name">Appraisal Peer Review</field>
+        <field name="name">Appraisal 360 Review</field>
         <field name="res_model">employee.performance.appraisal</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,pivot,form</field>
@@ -126,7 +126,7 @@
         <field name="search_view_id" ref="performance_appraisal_search_view"/>
     </record>
 
-    <menuitem id="menu_performance_appraisal" name="Peer Review" parent="menu_main_performance_appraisal"
+    <menuitem id="menu_performance_appraisal" name="360 Review" parent="menu_main_performance_appraisal"
               action="open_view_performance_appraisal_tree" sequence="2" />
 
 </odoo>

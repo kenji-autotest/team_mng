@@ -1,12 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+    <record id="indicator_category_form" model="ir.ui.view">
+        <field name="name">indicator.category.form</field>
+        <field name="model">performance.indicator.category</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="description"/>
+                        <field name="indicator_ids"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
     <record model="ir.ui.view" id="performance_indicator_search_view">
             <field name="name">Indicator</field>
             <field name="model">performance.indicator</field>
             <field name="arch" type="xml">
                 <search string="Indicator">
                     <field name="name"/>
+                    <field name="category_id"/>
                 </search>
             </field>
     </record>
@@ -16,6 +33,7 @@
         <field name="model">performance.indicator</field>
         <field name="arch" type="xml">
             <tree string="Indicators" toolbar="1" >
+                <field name="category_id"/>
                 <field name="name"/>
                 <field name="value_ids"/>
                 <field name="description"/>
@@ -44,6 +62,7 @@
                             </h1>
                         </div>
                         <group>
+                            <field name="category_id"/>
                             <field name="description" />
                             <field name="value_ids">
                                 <tree>

@@ -26,6 +26,7 @@
         'views/performance_appraisal_summary_views.xml',
         'views/performance_appraisal_views.xml',
         'views/performance_appraisal_details_views.xml',
+        'wizard/generate_appraisal_batches_view.xml'
     ],
     'qweb': [],
     'demo': [],

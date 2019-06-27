@@ -17,6 +17,7 @@
             </form>
         </field>
     </record>
+
     <record model="ir.ui.view" id="performance_strategy_search_view">
             <field name="name">Strategy</field>
             <field name="model">performance.strategy</field>

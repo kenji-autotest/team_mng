@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="appraisal_batches_form" model="ir.ui.view">
+            <field name="name">appraisal.batches.form</field>
+            <field name="model">appraisal.batches</field>
+            <field name="arch" type="xml">
+                <form string="Generate Appraisal">
+                    <group class="oe_title">
+                        <field name="strategy_id"/>
+                    </group>
+                    <group>
+                        <field name="interval" readonly="1"/>
+                        <group>
+                            <field name="year" required="1"/>
+                            <field name="month" attrs="{'required': [('interval', '=', 'month')],
+                                                        'invisible': [('interval','!=', 'month')]}"/>
+                            <field name="term" attrs="{'required': [('interval', '=', 'semi-annual')],
+                                                        'invisible': [('interval','!=', 'semi-annual')]}"/>
+                        </group>
+                        <group>
+                            <field name="expired_date" required="1"/>
+                            <field name="review_expired_date" required="1"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_generate_appraisal" string="Generate" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="appraisal_batches_action" model="ir.actions.act_window">
+            <field name="name">Generate Appraisals</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">appraisal.batches</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="appraisal_batches_form"/>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem id="menu_appraisal_batches" name="Generate Appraisals" parent="menu_main_performance_appraisal"
+              action="appraisal_batches_action" sequence="8" />
+
+</odoo>

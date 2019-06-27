@@ -64,22 +64,22 @@
                         <div class="oe_title">
                             <label for="employee_id" class="oe_edit_only"/>
                             <h1>
-                                <field name="employee_id" placeholder="Employee's Name" required="True"/>
+                                <field name="employee_id" placeholder="Employee's Name" required="True" readonly="1"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="job_title"/>
                                 <field name="department_id"/>
-                                <field name="strategy_id"/>
+                                <field name="strategy_id" readonly="1"/>
                                 <field name="manager_id"/>
                                 <field name="recommended_score"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <field name="expired_date"/>
-                                <field name="review_expired_date"/>
-                                <field name="score" />
+                                <field name="date" readonly="1"/>
+                                <field name="expired_date" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                                <field name="review_expired_date" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                                <field name="score" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                             </group>
                         </group>
                         <group>
@@ -91,7 +91,7 @@
                             <page name="peer_reviews" string="Peer Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
                                 <field name="appraisal_ids">
                                     <tree editable="bottom" create="false" delete="false">
-                                        <field name="reviewer_id"/>
+                                        <field name="reviewer_id" readonly="1"/>
                                         <field name="score" avg="Avg. Rate"/>
                                         <field name="general"/>
                                     </tree>
@@ -99,7 +99,7 @@
                             </page>
                             <field name="private_access" invisible="1"/>
                             <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
-                                <field name="private_note" />
+                                <field name="private_note" attrs="{'invisible': [('appraisal_ids', '=', False)]}" />
                                 <field name="private_note_reviews" />
                             </page>
                         </notebook>
