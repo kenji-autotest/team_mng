@@ -28,7 +28,7 @@ class IFIEmployeeAppraisalSummary(models.Model):
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
     recommended_score = fields.Float(compute='_compute_recommended_score', string='Avg score', store=True,
                                        track_visibility='onchange', group_operator="avg")
-    general = fields.Text(track_visibility='onchange')
+    general = fields.Text(string='General (*)', track_visibility='onchange')
     improvement_points = fields.Text(track_visibility='onchange')
     next_objectives = fields.Text(track_visibility='onchange')
     score = fields.Float(string='Score', track_visibility='onchange', group_operator="avg")
@@ -99,6 +99,8 @@ class IFIEmployeeAppraisalSummary(models.Model):
 
     @api.one
     def action_submit(self):
+        if not self.general or not strip(self.general):
+            raise ValidationError(_('General(*) is required!'))
         self.write({'state': 'submitted'})
 
     @api.model
@@ -141,7 +143,7 @@ class IFIEmployeePerformance(models.Model):
                               ], string="State", default='draft', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
     auto_score = fields.Boolean(related='strategy_id.auto_score', store=True)
-    general = fields.Text(track_visibility='onchange')
+    general = fields.Text(track_visibility='onchange', string="General (*)")
     score = fields.Float(string='Score', compute='compute_score', store=True, group_operator="avg",
                          track_visibility='onchange')
     score_tmp = fields.Float(string='Score(manual)', track_visibility='onchange', group_operator="avg")
@@ -194,6 +196,8 @@ class IFIEmployeePerformance(models.Model):
 
     @api.one
     def action_submit(self):
+        if not self.general or not strip(self.general):
+            raise ValidationError(_('General(*) is required!'))
         self.write({'state': 'submitted'})
 
     @api.model
@@ -238,6 +242,7 @@ class IFIEmployeePerformanceDetails(models.Model):
     score = fields.Float(compute='_compute_score', store=True, group_operator="avg")
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
+    note = fields.Text()
 
     @api.depends('strategy_id', 'indicator_id', 'strategy_id.indicator_ids', 'strategy_id.indicator_ids.weight')
     def _compute_weight(self):

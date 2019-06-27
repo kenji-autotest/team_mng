@@ -28,6 +28,7 @@
                 <field name="indicator_id"/>
                 <field name="value_id" options="{'no_create': True}"/>
                 <field name="score" />
+                <field name="note"/>
             </tree>
         </field>
     </record>
@@ -77,6 +78,7 @@
                                 <field name="value_id" string="Rate" options="{'no_create': True}" domain="[('indicator_id', '=', [indicator_id])]"/>
                                 <field name="conceptual_score" />
                                 <field name="score" />
+                                <field name="note" />
                             </group>
                         </group>
                     </sheet>

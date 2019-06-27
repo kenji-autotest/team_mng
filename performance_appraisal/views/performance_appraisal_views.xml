@@ -76,7 +76,7 @@
                             </group>
                             <group>
                                 <field name="reviewer_id" attrs="{'readonly': [('state','!=', 'draft')]}"/>
-                                <field name="date" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                                <field name="date" readonly="1"/>
                                 <field name="start_date" invisible="1"/>
                                 <field name="expired_date" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                                 <field name="score" attrs="{'invisible': [('auto_score', '=', False)]}"/>
@@ -90,12 +90,13 @@
                             <page name="indicator" string="Evaluation Details" attrs="{'invisible': [('auto_score', '=', False)]}" >
                                 <field name="appraisal_details_ids" attrs="{'readonly': [('state','!=', 'draft')]}">
                                     <tree editable="bottom" create="false" delete="false" >
-                                        <field name="category_id" readonly="1"/>
+                                        <field name="category_id" readonly="1" invisible="1"/>
                                         <field name="indicator_id"/>
                                         <field name="rating_guide" string="Description" invisible="1"/>
                                         <field name="value_id" string="Rate" options="{'no_create': True}" domain="[('indicator_id', '=', [indicator_id])]"/>
                                         <field name="weight" widget="integer" invisible="1"/>
                                         <field name="score" sum="Total" widget="integer"/>
+                                        <field name="note" />
                                     </tree>
                                 </field>
                             </page>

@@ -69,6 +69,12 @@ class GenerateAppraisals(models.TransientModel):
     def action_generate_appraisal(self):
         appraisal_ids = []
         employee_ids = self.env['employee.performance.reviewer'].search([('strategy_id', '=', self.strategy_id.id)]).mapped('employee_id')
+        existing_appraisals = self.env['employee.appraisal.summary'].search([('employee_id', 'in', employee_ids.ids),
+                                                                             ('strategy_id', '=', self.strategy_id.id),
+                                                                             ('date', '=', self.date)]).mapped('employee_id')
+        employee_ids -= existing_appraisals
+        if not employee_ids:
+            raise ValidationError(_('There is no employee setting for this Strategy or the appraisals have been generated before!'))
         for r in employee_ids:
             res = self.env['employee.appraisal.summary'].create({'employee_id': r.id,
                                                                  'date': self.date,
