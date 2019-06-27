@@ -229,6 +229,8 @@ class IFIEmployeePerformanceDetails(models.Model):
     date = fields.Date(string='Appraisal Date', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', related='appraisal_id.strategy_id', store=True)
     indicator_id = fields.Many2one('performance.indicator')
+    category_id = fields.Many2one('performance.indicator.category', related='indicator_id.category_id',
+                                  string='Category', store=True)
     rating_guide = fields.Text(string="Description", related='indicator_id.description', store=True)
     value_id = fields.Many2one('indicator.value', string="Rate")
     conceptual_score = fields.Float(related='value_id.conceptual_score', store=True, string='Rate', group_operator="avg")

@@ -8,6 +8,7 @@
                 <sheet>
                     <group>
                         <field name="indicator_id" />
+                        <field name="category_id" readonly="1"/>
                         <field name="strategy_id"/>
                         <field name="weight"/>
                         <field name="note"/>
@@ -85,6 +86,7 @@
                                 <field name="indicator_ids" >
                                     <tree editable="bottom">
                                         <field name="indicator_id"/>
+                                        <field name="category_id" readonly="1"/>
                                         <field name="weight" sum="Total" widget="integer"/>
                                     </tree>
                                 </field>

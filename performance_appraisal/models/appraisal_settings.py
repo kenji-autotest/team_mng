@@ -61,6 +61,8 @@ class IFIIndicatorWeighing(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     indicator_id = fields.Many2one('performance.indicator', string="Indicator", ondelete='restrict')
+    category_id = fields.Many2one('performance.indicator.category', related='indicator_id.category_id',
+                                  string='Category', store=True)
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy')
     weight = fields.Float("Weight(%)", default=100)
     note = fields.Char()
