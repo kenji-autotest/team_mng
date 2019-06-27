@@ -18,7 +18,7 @@
         <field name="name">performance.appraisal.list</field>
         <field name="model">employee.performance.appraisal</field>
         <field name="arch" type="xml">
-            <tree string="360 Reviews" toolbar="1" >
+            <tree string="360 Reviews" toolbar="1" create="0">
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="job_title"/>

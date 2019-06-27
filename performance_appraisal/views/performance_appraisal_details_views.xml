@@ -19,7 +19,7 @@
         <field name="name">performance.appraisal.detail.list</field>
         <field name="model">employee.performance.appraisal.details</field>
         <field name="arch" type="xml">
-            <tree string="Appraisals" toolbar="1" >
+            <tree string="Appraisals" toolbar="1" create="0">
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="job_title" />
@@ -38,8 +38,8 @@
         <field name="model">employee.performance.appraisal.details</field>
         <field name="arch" type="xml">
             <pivot string="Indicator Analysis" >
-                <field name="employee_id" type="row"/>
                 <field name="indicator_id" type="row"/>
+                <field name="date" type="col"/>
                 <field name="score" type="measure"/>
                 <field name="conceptual_score" type="measure"/>
             </pivot>

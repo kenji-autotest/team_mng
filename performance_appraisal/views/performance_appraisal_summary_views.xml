@@ -18,7 +18,7 @@
         <field name="name">performance.appraisal.summary.list</field>
         <field name="model">employee.appraisal.summary</field>
         <field name="arch" type="xml">
-            <tree string="Appraisals" toolbar="1" >
+            <tree string="Appraisals" toolbar="1" create="0">
                 <field name="date"/>
                 <field name="employee_id"/>
                 <field name="job_title"/>
