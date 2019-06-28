@@ -40,6 +40,6 @@
         </record>
 
     <menuitem id="menu_appraisal_batches" name="Generate Appraisals" parent="menu_main_performance_appraisal"
-              action="appraisal_batches_action" sequence="8" />
+              action="appraisal_batches_action" sequence="8" groups="performance_appraisal.group_performance_appraisal_manager"/>
 
 </odoo>
