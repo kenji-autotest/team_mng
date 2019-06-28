@@ -10,7 +10,8 @@ class GenerateAppraisals(models.TransientModel):
     _name = 'appraisal.batches'
     _description = 'Generate Appraisal Batches'
 
-    strategy_id = fields.Many2one('performance.strategy', 'Strategy', required=True)
+    strategy_id = fields.Many2one('performance.strategy', 'Strategy', required=True,
+                                  domain="[('parent_id', '=', False)]")
     interval = fields.Selection([
         ('month', 'Monthly'),
         ('semi-annual', 'Semi-Annual'),
@@ -27,7 +28,7 @@ class GenerateAppraisals(models.TransientModel):
 
     @api.multi
     @api.constrains('expired_date', 'review_expired_date', 'date')
-    def _check_currency(self):
+    def _check_date(self):
         if not self.year.isdigit():
             raise ValidationError(_('Year must be 4 digits number'))
         if self.date and self.expired_date and self.expired_date < self.date:
@@ -38,7 +39,7 @@ class GenerateAppraisals(models.TransientModel):
     @api.onchange('strategy_id')
     def _onchange_strategy_id(self):
         if self.strategy_id:
-           self.interval = self.strategy_id.interval
+            self.interval = self.strategy_id.interval
 
     @api.onchange('year', 'term', 'month')
     def _onchange_date(self):
@@ -75,8 +76,8 @@ class GenerateAppraisals(models.TransientModel):
         employee_ids -= existing_appraisals
         if not employee_ids:
             raise ValidationError(_('There is no employee setting for this Strategy or the appraisals have been generated before!'))
-        for r in employee_ids:
-            res = self.env['employee.appraisal.summary'].create({'employee_id': r.id,
+        for e in employee_ids:
+            res = self.env['employee.appraisal.summary'].create({'employee_id': e.id,
                                                                  'date': self.date,
                                                                  'expired_date': self.expired_date,
                                                                  'review_expired_date': self.review_expired_date,

@@ -99,7 +99,7 @@ class IFIEmployeeAppraisalSummary(models.Model):
 
     @api.one
     def action_submit(self):
-        if not self.general or not strip(self.general):
+        if not self.general or not self.general.strip():
             raise ValidationError(_('General(*) is required!'))
         self.write({'state': 'submitted'})
 
@@ -120,6 +120,13 @@ class IFIEmployeeAppraisalSummary(models.Model):
                                                                    'expired_date': res.review_expired_date,
                                                                    'strategy_id': res.strategy_id.id})
         return res
+
+    @api.multi
+    def unlink(self):
+        for r in self:
+            if r.state != 'draft' or any(i.state != 'draft' for i in r.appraisal_ids):
+                raise UserError(_('You cannot remove/deactivate an appraisal which is submitted.'))
+        return super(IFIEmployeeAppraisalSummary, self).unlink()
 
 
 class IFIEmployeePerformance(models.Model):
@@ -204,16 +211,28 @@ class IFIEmployeePerformance(models.Model):
     def create(self, vals):
         res = super(IFIEmployeePerformance, self).create(vals)
         if not vals.get('appraisal_details_ids', False):
-            for r in res.strategy_id.indicator_ids:
-                self.env['employee.performance.appraisal.details'].create({'appraisal_id': res.id,
-                                                                           'employee_id': res.employee_id.id,
-                                                                           'department_id': res.department_id.id,
-                                                                           'job_title': res.job_title,
-                                                                           'reviewer_id': res.reviewer_id.id,
-                                                                           'date': res.date,
-                                                                           'strategy_id': res.strategy_id.id,
-                                                                           'indicator_id': r.indicator_id.id})
+            strategies = self.env['performance.strategy'].search(
+                [('id', 'child_of', res.strategy_id.id)]) + res.strategy_id
+            strategy_ids = set(strategies.ids)
+            strategies = self.env['performance.strategy'].browse(strategy_ids)
+            for s in strategies:
+                for r in s.indicator_ids:
+                    self.env['employee.performance.appraisal.details'].create({'appraisal_id': res.id,
+                                                                               'employee_id': res.employee_id.id,
+                                                                               'department_id': res.department_id.id,
+                                                                               'job_title': res.job_title,
+                                                                               'reviewer_id': res.reviewer_id.id,
+                                                                               'date': res.date,
+                                                                               'strategy_id': s.id,
+                                                                               'indicator_id': r.indicator_id.id})
         return res
+
+    @api.multi
+    def unlink(self):
+        for r in self:
+            if r.state != 'draft':
+                raise UserError(_('You cannot remove/deactivate an appraisal which is submitted.'))
+        return super(IFIEmployeePerformance, self).unlink()
 
 
 class IFIEmployeePerformanceDetails(models.Model):

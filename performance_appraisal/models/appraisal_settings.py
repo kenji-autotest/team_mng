@@ -34,10 +34,17 @@ class IFIPerformanceStrategy(models.Model):
         ('annual', 'Annual'),
     ], string='Interval', default="month")
     date = fields.Date(string='Effective Date')
+    parent_id = fields.Many2one('performance.strategy', string='Parent Strategy', index=True)
+    child_ids = fields.One2many('performance.strategy', 'parent_id', string='Child Strategy', copy=True)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Strategy already exists!"),
     ]
+
+    @api.constrains('parent_id')
+    def _check_parent_id(self):
+        if not self._check_recursion(parent='parent_id'):
+            raise ValidationError(_('Error! You cannot create recursive hierarchy of Strategy.'))
 
     @api.one
     def action_set_to_draft(self):

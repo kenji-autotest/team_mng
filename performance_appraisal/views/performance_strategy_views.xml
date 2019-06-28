@@ -39,6 +39,7 @@
                 <field name="description"/>
                 <field name="state"/>
                 <field name="auto_score"/>
+                <field name="parent_id"/>
                 <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
             </tree>
         </field>
@@ -72,6 +73,7 @@
                         </div>
                         <group>
                             <group>
+                                <field name="parent_id"/>
                                 <field name="approval_id"/>
                             </group>
                             <group>
