@@ -107,18 +107,23 @@ class IFIEmployeeAppraisalSummary(models.Model):
     def create(self, vals):
         res = super(IFIEmployeeAppraisalSummary, self).create(vals)
         if not vals.get('appraisal_ids', False):
-            reviewer_setting_ids = self.env['employee.performance.reviewer'].search([('employee_id', '=', res.employee_id.id),
-                                                                                     ('strategy_id', '=', res.strategy_id.id),])
-            reviewer_ids = reviewer_setting_ids.mapped('reviewer_ids')
-            for r in reviewer_ids:
-                self.env['employee.performance.appraisal'].create({'appraisal_summary_id': res.id,
-                                                                   'employee_id': res.employee_id.id,
-                                                                   'department_id': res.department_id.id,
-                                                                   'job_title': res.job_title,
-                                                                   'reviewer_id': r.id,
-                                                                   'date': res.date,
-                                                                   'expired_date': res.review_expired_date,
-                                                                   'strategy_id': res.strategy_id.id})
+            strategies = self.env['performance.strategy'].search(
+                [('id', 'child_of', res.strategy_id.id)]) + res.strategy_id
+            strategy_ids = set(strategies.ids)
+            strategies = self.env['performance.strategy'].browse(strategy_ids)
+            for s in strategies:
+                reviewer_setting_ids = self.env['employee.performance.reviewer'].search([('employee_id', '=', res.employee_id.id),
+                                                                                         ('strategy_id', '=', s.id),])
+                reviewer_ids = reviewer_setting_ids.mapped('reviewer_ids')
+                for r in reviewer_ids:
+                    self.env['employee.performance.appraisal'].create({'appraisal_summary_id': res.id,
+                                                                       'employee_id': res.employee_id.id,
+                                                                       'department_id': res.department_id.id,
+                                                                       'job_title': res.job_title,
+                                                                       'reviewer_id': r.id,
+                                                                       'date': res.date,
+                                                                       'expired_date': res.review_expired_date,
+                                                                       'strategy_id': s.id})
         return res
 
     @api.multi
@@ -211,20 +216,15 @@ class IFIEmployeePerformance(models.Model):
     def create(self, vals):
         res = super(IFIEmployeePerformance, self).create(vals)
         if not vals.get('appraisal_details_ids', False):
-            strategies = self.env['performance.strategy'].search(
-                [('id', 'child_of', res.strategy_id.id)]) + res.strategy_id
-            strategy_ids = set(strategies.ids)
-            strategies = self.env['performance.strategy'].browse(strategy_ids)
-            for s in strategies:
-                for r in s.indicator_ids:
-                    self.env['employee.performance.appraisal.details'].create({'appraisal_id': res.id,
-                                                                               'employee_id': res.employee_id.id,
-                                                                               'department_id': res.department_id.id,
-                                                                               'job_title': res.job_title,
-                                                                               'reviewer_id': res.reviewer_id.id,
-                                                                               'date': res.date,
-                                                                               'strategy_id': s.id,
-                                                                               'indicator_id': r.indicator_id.id})
+            for r in res.strategy_id.indicator_ids:
+                self.env['employee.performance.appraisal.details'].create({'appraisal_id': res.id,
+                                                                           'employee_id': res.employee_id.id,
+                                                                           'department_id': res.department_id.id,
+                                                                           'job_title': res.job_title,
+                                                                           'reviewer_id': res.reviewer_id.id,
+                                                                           'date': res.date,
+                                                                           'strategy_id': res.strategy_id.id,
+                                                                           'indicator_id': r.indicator_id.id})
         return res
 
     @api.multi

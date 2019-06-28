@@ -11,6 +11,7 @@
                     <field name="department_id"/>
                     <field name="job_title"/>
                     <field name="reviewer_id"/>
+                    <field name="strategy_id"/>
                 </search>
             </field>
     </record>
@@ -20,14 +21,15 @@
         <field name="model">employee.performance.appraisal.details</field>
         <field name="arch" type="xml">
             <tree string="Appraisals" toolbar="1" create="0">
-                <field name="date"/>
+                <field name="date" />
+                <field name="indicator_id"/>
+                <field name="value_id" options="{'no_create': True}"/>
+                <field name="score" />
+                <field name="strategy_id"/>
                 <field name="employee_id"/>
                 <field name="job_title" />
                 <field name="department_id"/>
                 <field name="reviewer_id" />
-                <field name="indicator_id"/>
-                <field name="value_id" options="{'no_create': True}"/>
-                <field name="score" />
                 <field name="note"/>
             </tree>
         </field>
