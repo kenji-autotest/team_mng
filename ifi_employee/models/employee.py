@@ -30,6 +30,7 @@ class IFIEmployee(models.Model):
     job_title = fields.Char("Job Title", required=True)
     work_email = fields.Char('Work Email', required=True)
     department_id = fields.Many2one('hr.department', string='Department', required=True)
+    staff_id = fields.Char(string='Staff ID')
 
     @api.multi
     def create_user(self):
