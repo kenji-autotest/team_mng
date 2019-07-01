@@ -78,9 +78,11 @@ class IFIEmployeeAppraisalSummary(models.Model):
     def _compute_department_id(self):
         for r in self:
             if r.employee_id:
-                r.update({'department_id': r.employee_id.department_id or False,
-                          'job_title': r.employee_id.job_title or False,
-                          'manager_id': r.employee_id.parent_id and r.employee_id.parent_id.id or False})
+                department_id = r.employee_id.department_id or False
+                if department_id:
+                    r.update({'department_id': r.employee_id.department_id.id,
+                              'job_title': r.employee_id.job_title or False,
+                              'manager_id': r.employee_id.parent_id and r.employee_id.parent_id.id or department_id.manager_id.id})
 
     @api.depends('appraisal_ids.score','appraisal_ids.private_note')
     def _compute_recommended_score(self):

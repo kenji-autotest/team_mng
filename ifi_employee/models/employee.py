@@ -28,4 +28,33 @@ class IFIEmployee(models.Model):
 
     skype = fields.Char(string='Skype')
     job_title = fields.Char("Job Title", required=True)
+    work_email = fields.Char('Work Email', required=True)
+    department_id = fields.Many2one('hr.department', string='Department', required=True)
 
+    @api.multi
+    def create_user(self):
+        for r in self:
+            user_id = self.env['res.users'].create({'name': r.name, 'login': r.work_email})
+            if user_id:
+                r.user_id = user_id
+
+    @api.model
+    def create(self, vals):
+        res = super(IFIEmployee, self).create(vals)
+        if vals.get('user_id', False) not in vals:
+            res.create_user()
+        return res
+
+    @api.multi
+    def write(self, vals):
+        res = super(IFIEmployee, self).write(vals)
+        for r in self:
+            if not r.user_id:
+                r.create_user()
+        return res
+
+
+class IFIDepartment(models.Model):
+    _inherit = "hr.department"
+
+    manager_id = fields.Many2one('hr.employee', string='Manager', track_visibility='onchange', required=True)
