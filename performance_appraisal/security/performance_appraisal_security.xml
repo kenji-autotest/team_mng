@@ -94,9 +94,9 @@
         </record>
 
         <record model="ir.rule" id="appraisal_summary_members_rule">
-            <field name="name">Appraisal: employees: see own</field>
+            <field name="name">Appraisal: Employees: see own</field>
             <field name="model_id" ref="model_employee_appraisal_summary"/>
-            <field name="domain_force">[('employee_id', 'in', user.employee_ids.ids)]</field>
+            <field name="domain_force">['|', ('employee_id', 'in', user.employee_ids.ids), ('employee_id.parent_id', 'in', user.employee_ids.ids)]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
             <field name="perm_write" eval="False"/>
@@ -105,11 +105,11 @@
         </record>
 
         <record model="ir.rule" id="appraisal_members_rule">
-            <field name="name">Appraisal 360: employees: see own</field>
+            <field name="name">Appraisal 360: Employees: see own</field>
             <field name="model_id" ref="model_employee_performance_appraisal"/>
-            <field name="domain_force">['|',
-                                            ('employee_id', 'in', user.employee_ids.ids),
-                                            ('reviewer_id', 'in', user.employee_ids.ids)
+            <field name="domain_force">['|', '|',('employee_id', 'in', user.employee_ids.ids),
+                ('reviewer_id', 'in', user.employee_ids.ids),
+                ('employee_id.parent_id', 'in', user.employee_ids.ids)
                                         ]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -121,8 +121,9 @@
         <record model="ir.rule" id="appraisal_detail_members_rule">
             <field name="name">Performance Indicator: employees: see own</field>
             <field name="model_id" ref="model_employee_performance_appraisal_details"/>
-            <field name="domain_force">['|',('employee_id', 'in', user.employee_ids.ids),
-                                            ('reviewer_id', 'in', user.employee_ids.ids)
+            <field name="domain_force">['|', '|', ('employee_id', 'in', user.employee_ids.ids),
+                ('reviewer_id', 'in', user.employee_ids.ids),
+                ('employee_id.parent_id', 'in', user.employee_ids.ids)
                                         ]</field>
             <field name="groups" eval="[(4, ref('base.group_user'))]"/>
             <field name="perm_read" eval="True"/>
@@ -132,7 +133,7 @@
         </record>
 
         <record model="ir.rule" id="appraisal_summary_dm_rule">
-            <field name="name">Appraisal: employees: see own</field>
+            <field name="name">Appraisal: Department: see own</field>
             <field name="model_id" ref="model_employee_appraisal_summary"/>
             <field name="domain_force">[('department_id', 'in', [r.department_id.id for r in user.employee_ids])]</field>
             <field name="groups" eval="[(4, ref('ifi_employee.group_hr_department_manager')), (4, ref('ifi_employee.group_hr_department_vice'))]"/>
@@ -143,7 +144,7 @@
         </record>
 
         <record model="ir.rule" id="appraisal_dm_rule">
-            <field name="name">Appraisal 360: departmnent: see own</field>
+            <field name="name">Appraisal 360: dDepartmnent: see own</field>
             <field name="model_id" ref="model_employee_performance_appraisal"/>
             <field name="domain_force">[('department_id', 'in', [r.department_id.id for r in user.employee_ids])]</field>
             <field name="groups" eval="[(4, ref('ifi_employee.group_hr_department_manager')), (4, ref('ifi_employee.group_hr_department_vice'))]"/>
@@ -154,7 +155,7 @@
         </record>
 
         <record model="ir.rule" id="appraisal_detail_dm_rule">
-            <field name="name">Performance Indicator: departmnent: see own</field>
+            <field name="name">Performance Indicator: Departmnent: see own</field>
             <field name="model_id" ref="model_employee_performance_appraisal_details"/>
             <field name="domain_force">[('department_id', 'in', [r.department_id.id for r in user.employee_ids])]</field>
             <field name="groups" eval="[(4, ref('ifi_employee.group_hr_department_manager')), (4, ref('ifi_employee.group_hr_department_vice'))]"/>
