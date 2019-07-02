@@ -15,7 +15,7 @@
         'web',
     ],
     'data': [
-        'views/project_view.xml',
+        'views/project_team_view.xml',
     ],
     'images': [
         'static/description/ProjectTeam.png',
