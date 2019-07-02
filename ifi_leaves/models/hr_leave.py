@@ -23,7 +23,7 @@ class IFIEmployeeLeave(models.Model):
         for holiday in self:
             if holiday.can_approve:
                 continue
-            if self.user_has_groups('ifi_employee.group_hr_department_manager', 'ifi_employee.group_hr_department_vice'):
+            if self.user_has_groups('ifi_employee.group_hr_department_manager') or self.user_has_groups('ifi_employee.group_hr_department_vice'):
                 if self.user.employee_ids and self.user.employee_ids[0].department_id \
                         and holiday.employee_id.department_id \
                         and self.user.employee_ids[0].department_id == holiday.employee_id.department_id:
