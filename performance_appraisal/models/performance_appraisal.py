@@ -101,7 +101,7 @@ class IFIEmployeeAppraisalSummary(models.Model):
 
     @api.one
     def action_submit(self):
-        if not self.general or not self.general.strip():
+        if not self.general:
             raise ValidationError(_('General(*) is required!'))
         self.write({'state': 'submitted'})
 
@@ -210,7 +210,7 @@ class IFIEmployeePerformance(models.Model):
 
     @api.one
     def action_submit(self):
-        if not self.general or not self.general.strip():
+        if not self.general:
             raise ValidationError(_('General(*) is required!'))
         self.write({'state': 'submitted'})
 
