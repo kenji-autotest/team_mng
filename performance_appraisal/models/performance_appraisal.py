@@ -33,7 +33,7 @@ class IFIEmployeeAppraisalSummary(models.Model):
         domain = []
         project_id = self.env.ref('performance_appraisal.appraisal_orientations')
         if project_id:
-            domain = [('project_id', '=', project_id), '|', ('active', '=', False), ('active', '=', True)]
+            domain = [('project_id', '=', project_id.id), '|', ('active', '=', False), ('active', '=', True)]
         return domain
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
