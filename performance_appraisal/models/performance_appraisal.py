@@ -23,7 +23,8 @@ class IFIEmployeeGoals(models.Model):
             project_id = self.env.ref('performance_appraisal.appraisal_orientations')
             project_id = project_id.id or False
             vals.update({'project_id': project_id,
-                         'user_id': user_id})
+                         'user_id': user_id,
+                         'stage_id': 1})
         return super(IFIEmployeeGoals, self).create(vals)
 
 
