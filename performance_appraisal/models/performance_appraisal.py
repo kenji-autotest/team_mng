@@ -16,10 +16,14 @@ class IFIEmployeeGoals(models.Model):
 
     @api.model
     def create(self, vals):
-        context = dict(self._context or {})
-        if context.get('appraisal_id', False):
-            vals.update({'project_id': self.env.ref('performance_appraisal.appraisal_orientations'),
-                         'active': False})
+        appraisal_id = vals.get('appraisal_id', False)
+        if appraisal_id:
+            user_id = self.env['employee.appraisal.summary'].browse(appraisal_id).employee_id.user_id
+            user_id = user_id.id or 1
+            project_id = self.env.ref('performance_appraisal.appraisal_orientations')
+            project_id = project_id.id or False
+            vals.update({'project_id': project_id,
+                         'user_id': user_id})
         return super(IFIEmployeeGoals, self).create(vals)
 
 

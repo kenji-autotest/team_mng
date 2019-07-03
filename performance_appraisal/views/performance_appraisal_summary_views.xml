@@ -89,6 +89,7 @@
                             <field name="next_objectives" attrs="{'readonly': [('state','!=', 'draft')]}" invisible="1"/>
                         </group>
                         <field name="private_access" invisible="1"/>
+                        <field name="project_id" invisible="1"/>
                         <notebook>
                             <page name="peer_reviews" string="360 Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
                                 <field name="appraisal_ids">
@@ -104,8 +105,8 @@
                                     <tree editable="bottom">
                                         <field name="name"/>
                                         <field name="date_deadline"/>
-                                        <field name="project_id" invisible="1" />
-                                        <field name="user_id" invisible="1" context="{'default_user_id': active_id.employee_id.user_id}"/>
+                                        <field name="project_id" invisible="1"/>
+                                        <field name="user_id" invisible="1" />
                                         <field name="appraisal_id" invisible="1" context="{'default_appraisal_id': active_id}" />
                                     </tree>
                                 </field>
