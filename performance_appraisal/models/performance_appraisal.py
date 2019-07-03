@@ -8,11 +8,33 @@ from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.tools.safe_eval import safe_eval
 
 
+class IFIEmployeeGoals(models.Model):
+
+    _inherit = "project.task"
+
+    appraisal_id = fields.Many2one('employee.appraisal.summary', string='Appraisal')
+
+    @api.model
+    def create(self, vals):
+        context = dict(self._context or {})
+        if context.get('appraisal_id', False):
+            vals.update({'project_id': self.env.ref('performance_appraisal.appraisal_orientations'),
+                         'active': False})
+        return super(IFIEmployeeGoals, self).create(vals)
+
+
 class IFIEmployeeAppraisalSummary(models.Model):
     _name = "employee.appraisal.summary"
     _description = "Employee Performance Appraisal Summary"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'employee_id'
+
+    def _default_objectives(self):
+        domain = []
+        project_id = self.env.ref('performance_appraisal.appraisal_orientations')
+        if project_id:
+            domain = [('project_id', '=', project_id), '|', ('active', '=', False), ('active', '=', True)]
+        return domain
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Department', compute='_compute_department_id', store=True,
@@ -27,10 +49,12 @@ class IFIEmployeeAppraisalSummary(models.Model):
                               ], string="State", default='draft', track_visibility='onchange')
     strategy_id = fields.Many2one('performance.strategy', string='Appraisal Strategy', required=True)
     recommended_score = fields.Float(compute='_compute_recommended_score', string='Avg score', store=True,
-                                       track_visibility='onchange', group_operator="avg")
+                                     track_visibility='onchange', group_operator="avg")
     general = fields.Text(string='General (*)', track_visibility='onchange')
     improvement_points = fields.Text(track_visibility='onchange', string='Area of improvement')
-    next_objectives = fields.Text(track_visibility='onchange', string='Next Goals')
+    objective_ids = fields.One2many('project.task', 'appraisal_id', domain=lambda self: self._default_objectives())
+    next_objectives = fields.Html(track_visibility='onchange', string='Next Goals', compute='_compute_next_objectives',
+                                  store=True)
     score = fields.Float(string='Score', track_visibility='onchange', group_operator="max")
     private_note = fields.Text(string="Private Note")
     private_note_reviews = fields.Text(compute='_compute_recommended_score', track_visibility='onchange', store=True)
@@ -44,6 +68,14 @@ class IFIEmployeeAppraisalSummary(models.Model):
     _sql_constraints = [
         ('key_uniq', 'unique (employee_id, strategy_id, date)', 'Appraisal be unique.')
     ]
+
+    @api.depends('objective_ids', 'objective_ids.name')
+    def _compute_next_objectives(self):
+        for r in self:
+            objectives = ''
+            for i in r.objective_ids:
+                objectives += '- ' + i.name + '<br>'
+            r.next_objectives = objectives
 
     @api.depends('general', 'improvement_points', 'score')
     def _compute_summary(self):

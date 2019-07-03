@@ -28,7 +28,7 @@ class IFIEmployee(models.Model):
 
     skype = fields.Char(string='Skype')
     job_title = fields.Char("Job Title", required=True)
-    work_email = fields.Char('Work Email', required=True)
+    # work_email = fields.Char('Work Email', required=True)
     department_id = fields.Many2one('hr.department', string='Department', required=True)
     staff_id = fields.Char(string='Staff ID')
 
@@ -43,7 +43,7 @@ class IFIEmployee(models.Model):
     def create(self, vals):
         res = super(IFIEmployee, self).create(vals)
         if vals.get('user_id', False) not in vals:
-            res.create_user()
+            res.sudo().create_user()
         return res
 
     @api.multi

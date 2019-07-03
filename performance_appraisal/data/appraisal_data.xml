@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="appraisal_orientations" model="project.project">
+            <field name="name">Appraisal</field>
+            <field name="privacy_visibility">employees</field>
+            <field name="active">False</field>
+        </record>
+
+    </data>
+</odoo>

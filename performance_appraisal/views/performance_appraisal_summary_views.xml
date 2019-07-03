@@ -26,6 +26,7 @@
                 <field name="manager_id" />
                 <field name="state"/>
                 <field name="score"/>
+                <field name="next_objectives" />
                 <field name="summary" />
             </tree>
         </field>
@@ -85,8 +86,9 @@
                         <group>
                             <field name="general" attrs="{'readonly': [('state','!=', 'draft')]}"/>
                             <field name="improvement_points" attrs="{'readonly': [('state','!=', 'draft')]}"/>
-                            <field name="next_objectives" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                            <field name="next_objectives" attrs="{'readonly': [('state','!=', 'draft')]}" invisible="1"/>
                         </group>
+                        <field name="private_access" invisible="1"/>
                         <notebook>
                             <page name="peer_reviews" string="360 Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
                                 <field name="appraisal_ids">
@@ -97,7 +99,17 @@
                                     </tree>
                                 </field>
                             </page>
-                            <field name="private_access" invisible="1"/>
+                             <page name="peer_reviews" string="Next Goals" >
+                                <field name="objective_ids">
+                                    <tree editable="bottom">
+                                        <field name="name" readonly="1"/>
+                                        <field name="project_id" invisible="1" />
+                                        <field name="user_id" invisible="1" context="{'default_user_id': active_id.employee_id.user_id}"/>
+                                        <field name="appraisal_id" invisible="1" context="{'default_appraisal_id': active_id}" />
+                                    </tree>
+                                </field>
+                            </page>
+
                             <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
                                 <field name="private_note" attrs="{'invisible': [('appraisal_ids', '=', False)]}" />
                                 <field name="private_note_reviews" />

@@ -12,10 +12,12 @@
         'base_setup',
         'hr',
         'ifi_employee',
+        'project',
 
     ],
     'description': "",
     'data': [
+        'data/appraisal_data.xml',
         'security/performance_appraisal_security.xml',
         'security/ir.model.access.csv',
         'views/appraisal_menu.xml',
