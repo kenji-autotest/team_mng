@@ -5,7 +5,6 @@
         <record id="appraisal_orientations" model="project.project">
             <field name="name">Appraisal</field>
             <field name="privacy_visibility">employees</field>
-            <field name="active">False</field>
         </record>
 
     </data>

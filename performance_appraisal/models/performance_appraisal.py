@@ -29,12 +29,11 @@ class IFIEmployeeAppraisalSummary(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _rec_name = 'employee_id'
 
-    def _default_objectives(self):
-        domain = []
+    def _default_project(self):
         project_id = self.env.ref('performance_appraisal.appraisal_orientations')
         if project_id:
-            domain = [('project_id', '=', project_id.id), '|', ('active', '=', False), ('active', '=', True)]
-        return domain
+            return project_id.id
+        return False
 
     employee_id = fields.Many2one('hr.employee', string='Employee', required=True, track_visibility='onchange')
     department_id = fields.Many2one('hr.department', string='Department', compute='_compute_department_id', store=True,
@@ -52,7 +51,8 @@ class IFIEmployeeAppraisalSummary(models.Model):
                                      track_visibility='onchange', group_operator="avg")
     general = fields.Text(string='General (*)', track_visibility='onchange')
     improvement_points = fields.Text(track_visibility='onchange', string='Area of improvement')
-    objective_ids = fields.One2many('project.task', 'appraisal_id', domain=lambda self: self._default_objectives())
+    project_id = fields.Many2one('project.project', default=lambda self: self._default_project())
+    objective_ids = fields.One2many('project.task', 'appraisal_id')
     next_objectives = fields.Html(track_visibility='onchange', string='Next Goals', compute='_compute_next_objectives',
                                   store=True)
     score = fields.Float(string='Score', track_visibility='onchange', group_operator="max")

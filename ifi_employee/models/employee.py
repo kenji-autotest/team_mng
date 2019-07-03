@@ -46,13 +46,13 @@ class IFIEmployee(models.Model):
             res.sudo().create_user()
         return res
 
-    @api.multi
-    def write(self, vals):
-        res = super(IFIEmployee, self).write(vals)
-        for r in self:
-            if not r.user_id:
-                r.create_user()
-        return res
+    # @api.multi
+    # def write(self, vals):
+    #     res = super(IFIEmployee, self).write(vals)
+    #     for r in self:
+    #         if not r.user_id:
+    #             r.create_user()
+    #     return res
 
 
 class IFIDepartment(models.Model):
