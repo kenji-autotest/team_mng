@@ -31,6 +31,7 @@ class IFIEmployee(models.Model):
     work_email = fields.Char('Work Email', required=True)
     department_id = fields.Many2one('hr.department', string='Department', required=True)
     staff_id = fields.Char(string='Staff ID')
+    department_allocation_ids = fields.One2many('hr.employee.department', 'employee_id')
 
     @api.multi
     def create_user(self):
@@ -46,16 +47,26 @@ class IFIEmployee(models.Model):
             res.sudo().create_user()
         return res
 
-    # @api.multi
-    # def write(self, vals):
-    #     res = super(IFIEmployee, self).write(vals)
-    #     for r in self:
-    #         if not r.user_id:
-    #             r.create_user()
-    #     return res
+    @api.multi
+    def write(self, vals):
+        res = super(IFIEmployee, self).write(vals)
+        for r in self:
+            if r.department_id and r.department_id not in [i.department_id for i in r.department_allocation_ids]:
+                self.env['hr.employee.department'].create({'employee_id': r.id,
+                                                           'department_id': r.department_id.id,
+                                                           'date_start': fields.Date.today()})
+        return res
 
 
 class IFIDepartment(models.Model):
-    _inherit = "hr.department"
+    _name = "hr.employee.department"
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
-    manager_id = fields.Many2one('hr.employee', string='Manager', track_visibility='onchange', required=True)
+    employee_id = fields.Many2one('hr.employee', required=True)
+    department_id = fields.Many2one('hr.department', required=True)
+    date_start = fields.Date('Start Date', required=True)
+    date_end = fields.Date('End Date')
+    allocation = fields.Float(default=100)
+    note = fields.Char()
+    active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)

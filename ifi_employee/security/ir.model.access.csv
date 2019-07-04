@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_hr_employee_department,hr.employee.department,model_hr_employee_department,base.group_user,1,0,0,0
+access_hr_employee_department_user,hr.employee.department.user,model_hr_employee_department,hr.group_hr_user,1,1,1,1
+access_hr_employee_department_manager,hr.employee.department.manager,model_hr_employee_department,hr.group_hr_manager,1,1,1,1
+access_hr_employee_department_department_manager,hr.employee.department.department.manager,model_hr_employee_department,ifi_employee.group_hr_department_manager,1,1,1,1
+access_hr_employee_department_vice,hr.employee.department.vice,model_hr_employee_department,ifi_employee.group_hr_department_vice,1,1,1,1

@@ -2,7 +2,7 @@
 #################################################################################
 #
 #    Odoo, Open Source Management Solution
-#    Copyright (C) 2018-Today Ascetic Business Solution <www.asceticbs.com>
+#    Copyright (C) 2017-today Ascetic Business Solution <www.asceticbs.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,23 +19,17 @@
 #
 #################################################################################
 
-{
-    'name': "IFI Employees",
-    'author': 'IFI Solution',
-    'category': 'Human Resources',
-    'summary': """Display more info on Employee form and add new group Department Manager""",
-    'license': 'AGPL-3',
-    'website': 'http://www.ifisolution.com',
-    'description': """
-""",
-    'version': '1.0',
-    'depends': ['hr'],
-    'data': ['security/employee_security.xml',
-             'security/ir.model.access.csv',
-             'views/employee_view.xml',
-             'views/employee_department_view.xml'],
-    'images': [],
-    'installable': True,
-    'application': True,
-    'auto_install': False,
-}
+from odoo import api, fields, models, _
+
+
+class IFIDepartmentInherit(models.Model):
+    _inherit = "hr.department"
+
+    employee_id = fields.Many2one('hr.employee', required=True)
+    department_id = fields.Many2one('hr.department', required=True)
+    date_start = fields.Date('Start Date', required=True)
+    date_end = fields.Date('End Date')
+    allocation = fields.Float(default=100)
+    note = fields.Char()
+    active = fields.Boolean(default=True)
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)

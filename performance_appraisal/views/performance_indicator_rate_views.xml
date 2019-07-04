@@ -8,7 +8,6 @@
                 <search string="Indicator">
                     <field name="name"/>
                     <field name="conceptual_score"/>
-                    <field name="indicator_id"/>
                 </search>
             </field>
     </record>

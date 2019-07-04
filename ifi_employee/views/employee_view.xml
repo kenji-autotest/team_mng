@@ -8,10 +8,24 @@
             <xpath expr="//field[@name='address_id']" position="before">
                 <field name="staff_id"/>
             </xpath>
+
             <xpath expr="//field[@name='work_phone']" position="after">
                 <field name="skype"/>
             </xpath>
 
+            <xpath expr="//page[@name='hr_settings']" position="before">
+                <page name="departments" string="Departments" groups="hr.group_hr_user,hr.group_hr_manager,ifi_employee.group_hr_department_manager,ifi_employee.group_hr_department_vice">
+                    <field name="department_allocation_ids" string="Appraisal Reviewers">
+                        <tree editable="top">
+                            <field name="employee_id" context="{'default_employee_id': active_id}" invisible="1"/>
+                            <field name="department_id" options="{'no_create':True}"/>
+                            <field name="allocation"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
         </field>
     </record>
 
