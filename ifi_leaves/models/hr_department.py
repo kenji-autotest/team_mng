@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
@@ -25,40 +27,24 @@ class IFIDepartmentLeave(models.Model):
         today_date = datetime.datetime.utcnow().date()
         today_start = fields.Datetime.to_string(today_date)  # get the midnight of the current utc day
         today_end = fields.Datetime.to_string(today_date + relativedelta(hours=23, minutes=59, seconds=59))
-
-        leave_data = Requests.read_group(
-            [('department_id', 'in', self.ids),
-             ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
-        allocation_data = Allocations.read_group(
-            [('department_id', 'in', self.ids),
-             ('state', '=', 'confirm')],
-            ['department_id'], ['department_id'])
-        absence_data = Requests.read_group(
-            [('department_id', 'in', self.ids), ('state', 'not in', ['cancel', 'refuse']),
-             ('date_from', '<=', today_end), ('date_to', '>=', today_start)],
-            ['department_id'], ['department_id'])
-
-        res_leave = dict((data['department_id'][0], data['department_id_count']) for data in leave_data)
-        res_allocation = dict((data['department_id'][0], data['department_id_count']) for data in allocation_data)
-        res_absence = dict((data['department_id'][0], data['department_id_count']) for data in absence_data)
-
         for department in self:
-            department.leave_to_approve_count = res_leave.get(department.id, 0)
-            department.allocation_to_approve_count = res_allocation.get(department.id, 0)
-            department.absence_of_today = res_absence.get(department.id, 0)
 
-    @api.multi
-    def _compute_total_employee(self):
-        emp_data = self.env['hr.employee'].read_group([('department_id', 'in', self.ids)], ['department_id'],
-                                                      ['department_id'])
-        result = dict((data['department_id'][0], data['department_id_count']) for data in emp_data)
-        for department in self:
-            department.total_employee = result.get(department.id, 0)
+            leave_count = Requests.search_count([('employee_id.department_ids', 'in', [department.id]),
+                                                 ('state', '=', 'confirm')])
+            allocation_count = Allocations.search([('employee_id.department_ids', 'in', [department.id]),
+                                                   ('state', '=', 'confirm')])
+            absence_count = Requests.seach([('employee_id.department_ids', 'in', [department.id]),
+                                            ('state', 'not in', ['cancel', 'refuse']),
+                                            ('date_from', '<=', today_end),
+                                            ('date_to', '>=', today_start)])
+
+            department.leave_to_approve_count = leave_count
+            department.allocation_to_approve_count = allocation_count
+            department.absence_of_today = absence_count
 
     @api.multi
     def _compute_total_employee(self):
         for department in self:
-            department.total_employee = len(department.employee_all_ids)
+            department.total_employee = len(department.get_department_employees())
 
 

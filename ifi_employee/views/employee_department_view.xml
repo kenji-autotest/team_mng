@@ -81,4 +81,7 @@
               groups="hr.group_hr_manager"
               />
 
+    <function model="hr.employee.department" name="_init_data_department_allocation"/>
+
+
 </odoo>

@@ -35,19 +35,35 @@ class IFIDepartment(models.Model):
     active = fields.Boolean(default=True)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
 
+    @api.model
+    def _init_data_department_allocation(self):
+        employee_ids = self.env['hr.employee'].search([])
+        for r in employee_ids:
+            if r.department_id not in r.department_allocation_ids.mapped('department_id'):
+                self.env['hr.employee.department'].create({'employee_id': r.id,
+                                                           'department_id': r.department_id.id,
+                                                           'date_start': fields.Date.today()})
+
 
 class IFIEmployeeInherit(models.Model):
 
     _inherit = "hr.employee"
 
     department_allocation_ids = fields.One2many('hr.employee.department', 'employee_id')
-    department_ids = fields.Many2many('hr.department', compute='_compute_department_ids', store=True)
-
-    @api.multi
-    @api.depends('department_allocation_ids')
-    def _compute_department_ids(self):
-        for r in self:
-            r.department_ids = r.department_allocation_ids.mapped('department_id')
+    # department_ids = fields.Many2many('hr.department', compute='_compute_department_ids', store=True)
+    #
+    #
+    # @api.multi
+    # def _compute_department_ids(self):
+    #     date = fields.Date.today()
+    #     for r in self:
+    #         departments_allocation = self.env['hr.employee.department'].search(
+    #             [('employee_id', '=', r.id),
+    #              ('date_start', '<=', date),
+    #              '|', ('date_end', '>', date),
+    #              ('date_end', '=', False)])
+    #         department_ids = departments_allocation.mapped('department_id') + r.department_id
+    #         r.department_ids = [(6, 0, list(set(department_ids.ids)))]
 
     @api.multi
     def write(self, vals):
@@ -63,19 +79,26 @@ class IFIEmployeeInherit(models.Model):
 class IFIDepartmentInherit(models.Model):
     _inherit = "hr.department"
 
-    employee_all_ids = fields.Many2many('hr.employee', compute='_compute_employee_all_ids')
-
-    @api.one
-    def _compute_employee_all_ids(self):
-        self.employee_all_ids = self.get_employees_by_department(self.id)
-
-    @api.returns('self')
-    def get_employees_by_department(self, department_id, date=fields.Date.today()):
-        employees_allocation = self.env['hr.employee.department'].search([('department_id', 'child_of', [department_id]),
+    def get_department_employees(self):
+        date = fields.Date.today()
+        employees_allocation = self.env['hr.employee.department'].search([('department_id', 'child_of', self.ids),
                                                                           ('date_start', '<=', date),
                                                                           '|', ('date_end', '>', date),
                                                                           ('date_end', '=', False)])
-        employees = self.env['hr.employee'].search([('department_id', 'child_of', [department_id])])
+        employees = self.env['hr.employee'].search([('department_id', 'child_of', self.ids)])
         employee_ids = employees_allocation.mapped('employee_id') + employees
-        employee_ids = list(set(employee_ids.ids))
-        return self.env['hr.employee'].browse(employee_ids)
+        return list(set(employee_ids.ids))
+
+    @api.multi
+    def action_view_employees(self):
+        employee_ids = self.get_department_employees()
+        if employee_ids:
+            return {
+                'type': 'ir.actions.act_window',
+                'name': _('Employees'),
+                'res_model': 'hr.employee',
+                'domain': [('id', 'in', employee_ids)],
+                'view_id': False,
+                'view_mode': 'kanban,tree,form',
+                'view_type': 'form',
+            }

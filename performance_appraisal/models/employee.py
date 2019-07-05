@@ -36,7 +36,7 @@ class IFIEmployeePerformance(models.Model):
         if vals.get('appraisal_strategy_ids', False):
             for r in self:
                 strategy_ids = r.appraisal_strategy_ids.mapped('strategy_id')
-                r.performance_strategy_ids = [(6, 0, strategy_ids.ids)]
+                r.performance_strategy_ids = [(6, 0, list(set(strategy_ids.ids)))]
         return res
 
 

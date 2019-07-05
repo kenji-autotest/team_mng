@@ -11,7 +11,6 @@
 
             <xpath expr="//field[@name='work_phone']" position="after">
                 <field name="skype"/>
-                <field name="department_ids" invisible="1" widget="many2many_tags"/>
             </xpath>
             <xpath expr="//field[@name='user_id']" position="before">
                 <field name="state"/>
@@ -33,24 +32,19 @@
         </field>
     </record>
 
-    <record id="hr.act_employee_from_department" model="ir.actions.act_window">
-        <field name="name">Employees</field>
-        <field name="res_model">hr.employee</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">kanban,form,tree</field>
-        <field name="search_view_id" ref="hr.view_employee_filter"/>
-         <field name="context">{}
-            </field>
-        <field name="domain">[('department_ids','in',[active_id])]</field>
-        <field name="help" type="html">
-          <p class="o_view_nocontent_smiling_face">
-            Add a new employee
-          </p><p>
-            With just a quick glance on the Odoo employee screen, you
-            can easily find all the information you need for each person;
-            contact data, job position, availability, etc.
-          </p>
+
+    <record id="hr_department_view_kanban_ifi_inherit" model="ir.ui.view">
+        <field name="name">hr_department_view_kanban_ifi_inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.hr_department_view_kanban"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//div[hasclass('o_kanban_primary_left')]/button[hasclass('btn-primary')]" position="replace">
+                    <button class="btn btn-primary" name="action_view_employees" type="object">Employees</button>
+                </xpath>
+
+            </data>
         </field>
-    </record>
+        </record>
 
 </odoo>
