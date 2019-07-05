@@ -11,8 +11,12 @@
 
             <xpath expr="//field[@name='work_phone']" position="after">
                 <field name="skype"/>
+                <field name="department_ids" invisible="1" widget="many2many_tags"/>
             </xpath>
-
+            <xpath expr="//field[@name='user_id']" position="before">
+                <field name="state"/>
+                <field name="employment_status"/>
+            </xpath>
             <xpath expr="//page[@name='hr_settings']" position="before">
                 <page name="departments" string="Departments" groups="hr.group_hr_user,hr.group_hr_manager,ifi_employee.group_hr_department_manager,ifi_employee.group_hr_department_vice">
                     <field name="department_allocation_ids" string="Appraisal Reviewers">
@@ -26,6 +30,26 @@
                     </field>
                 </page>
             </xpath>
+        </field>
+    </record>
+
+    <record id="hr.act_employee_from_department" model="ir.actions.act_window">
+        <field name="name">Employees</field>
+        <field name="res_model">hr.employee</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">kanban,form,tree</field>
+        <field name="search_view_id" ref="hr.view_employee_filter"/>
+         <field name="context">{}
+            </field>
+        <field name="domain">[('department_ids','in',[active_id])]</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add a new employee
+          </p><p>
+            With just a quick glance on the Odoo employee screen, you
+            can easily find all the information you need for each person;
+            contact data, job position, availability, etc.
+          </p>
         </field>
     </record>
 

@@ -5,13 +5,6 @@ from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 
 
-# class IFIEmployee(models.Model):
-#
-#     _inherit = "hr.employee"
-#
-#     manager_ids = fields.Many2many('hr.employee', string='Other Managers')
-
-
 class IFIEmployeeLeave(models.Model):
     _inherit = 'hr.leave'
 
@@ -26,17 +19,18 @@ class IFIEmployeeLeave(models.Model):
             if self.user_has_groups('ifi_employee.group_hr_department_manager') or self.user_has_groups('ifi_employee.group_hr_department_vice'):
                 if self.env.user.employee_ids and self.env.user.employee_ids[0].department_id \
                         and holiday.employee_id.department_id \
-                        and self.env.user.employee_ids[0].department_id == holiday.employee_id.department_id:
+                        and (self.env.user.employee_ids[0].department_id == holiday.employee_id.department_id or holiday.employee_id.department_ids in [self.env.user.employee_ids[0].department_id]):
                     holiday.can_approve = True
 
-    # @api.multi
-    # def add_follower(self, employee_id):
-    #     super(IFIEmployeeLeave, self).add_follower(employee_id)
-    #     partner_ids = []
-    #     for i in employee_id.manager_ids:
-    #         if i.user_id:
-    #             partner_ids.append(i.user_id.partner_id.id)
-    #     if partner_ids:
-    #         self.message_subscribe(partner_ids=partner_ids)
+    def _get_responsible_for_approval(self):
+        if self.state == 'confirm' and self.manager_id.user_id:
+            return self.manager_id.user_id
+        elif self.state == 'confirm' and self.employee_id.parent_id.user_id:
+            return self.employee_id.parent_id.user_id
+        elif self.department_id.manager_id.user_id:
+            return self.department_id.manager_id.user_id
+        elif self.department_id.manager_id.parent_id and self.department_id.manager_id.parent_id.user_id:
+            return self.department_id.manager_id.parent_id.user_id
+        return self.env['res.users']
 
 
