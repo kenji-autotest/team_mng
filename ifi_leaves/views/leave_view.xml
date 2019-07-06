@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_leave_view_form_ifi_leaves_inherit" model="ir.ui.view">
+        <field name="name">hr_leave_view_form_ifi_leaves_inherit</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='department_id']" position="after">
+                <field name="approval_user_ids" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_view_form_manager_ifi_leaves_inherit" model="ir.ui.view">
+        <field name="name">hr_leave_view_form_manager_ifi_leaves_inherit</field>
+        <field name="model">hr.leave</field>
+        <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='report_note']" position="after">
+                <field name="approval_user_ids"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

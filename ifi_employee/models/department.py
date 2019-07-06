@@ -50,20 +50,18 @@ class IFIEmployeeInherit(models.Model):
     _inherit = "hr.employee"
 
     department_allocation_ids = fields.One2many('hr.employee.department', 'employee_id')
-    # department_ids = fields.Many2many('hr.department', compute='_compute_department_ids', store=True)
+    # department_ids = fields.Many2many('hr.department', compute='_compute_department_ids',)
     #
-    #
-    # @api.multi
-    # def _compute_department_ids(self):
-    #     date = fields.Date.today()
-    #     for r in self:
-    #         departments_allocation = self.env['hr.employee.department'].search(
-    #             [('employee_id', '=', r.id),
-    #              ('date_start', '<=', date),
-    #              '|', ('date_end', '>', date),
-    #              ('date_end', '=', False)])
-    #         department_ids = departments_allocation.mapped('department_id') + r.department_id
-    #         r.department_ids = [(6, 0, list(set(department_ids.ids)))]
+    @api.returns('hr.department')
+    @api.multi
+    def get_department_ids(self, date=fields.Date.today()):
+        departments_allocation = self.env['hr.employee.department'].search(
+            [('employee_id', '=', self.id),
+             ('date_start', '<=', date),
+             '|', ('date_end', '>', date),
+             ('date_end', '=', False)])
+        department_ids = departments_allocation.mapped('department_id') + self.department_id
+        return department_ids
 
     @api.multi
     def write(self, vals):

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_leave_department_setting_form_ifi_inherit" model="ir.ui.view">
+        <field name="name">view_leave_department_setting_form_ifi_inherit</field>
+        <field name="model">hr.department</field>
+        <field name="inherit_id" ref="hr.view_department_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group" position="after">
+                <notebook>
+                    <page name="departments" string="Leave Approval Settings" groups="hr.group_hr_user,hr.group_hr_manager,ifi_employee.group_hr_department_manager">
+                        <field name="leave_approval_user_ids" string="Leave Approval Settings">
+                            <tree editable="top">
+                                <field name="name" options="{'no_create_edit': True}"/>
+                                <field name="login" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
