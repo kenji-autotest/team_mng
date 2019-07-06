@@ -17,7 +17,7 @@
         <field name="inherit_id" ref="hr_holidays.hr_leave_view_form_manager"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='report_note']" position="after">
-                <field name="approval_user_ids"/>
+                <field name="approval_user_ids" invisible="1"/>
             </xpath>
         </field>
     </record>

@@ -50,8 +50,7 @@ class IFIEmployeeInherit(models.Model):
     _inherit = "hr.employee"
 
     department_allocation_ids = fields.One2many('hr.employee.department', 'employee_id')
-    # department_ids = fields.Many2many('hr.department', compute='_compute_department_ids',)
-    #
+
     @api.returns('hr.department')
     @api.multi
     def get_department_ids(self, date=fields.Date.today()):
