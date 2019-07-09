@@ -34,15 +34,15 @@ class IFIEmployeeLeave(models.Model):
                         and (self.env.user.employee_ids[0].department_id == holiday.employee_id.department_id):
                     holiday.can_approve = True
 
-    def _get_responsible_for_approval(self):
-        if self.state == 'confirm' and self.manager_id.user_id:
-            return self.manager_id.user_id
-        elif self.state == 'confirm' and self.employee_id.parent_id.user_id:
-            return self.employee_id.parent_id.user_id
-        elif self.department_id.manager_id.user_id:
-            return self.department_id.manager_id.user_id
-        elif self.department_id.manager_id.parent_id and self.department_id.manager_id.parent_id.user_id:
-            return self.department_id.manager_id.parent_id.user_id
-        return self.env['res.users']
+    # def _get_responsible_for_approval(self):
+    #     if self.state == 'confirm' and self.manager_id.user_id:
+    #         return self.manager_id.user_id
+    #     elif self.state == 'confirm' and self.employee_id.parent_id.user_id:
+    #         return self.employee_id.parent_id.user_id
+    #     elif self.department_id.manager_id.user_id:
+    #         return self.department_id.manager_id.user_id
+    #     elif self.department_id.manager_id.parent_id and self.department_id.manager_id.parent_id.user_id:
+    #         return self.department_id.manager_id.parent_id.user_id
+    #     return self.env['res.users']
 
 

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- daily auto checkin/out -->
+        <record id="ir_cron_data_attendance_daily_checkin_out" model="ir.cron">
+            <field name="name">HR Attendance: auto checkin</field>
+            <field name="model_id" ref="model_hr_attendance"/>
+            <field name="type">ir.actions.server</field>
+            <field name="state">code</field>
+            <field name="code">model.daily_auto_checkin()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+    </data>
+</odoo>
