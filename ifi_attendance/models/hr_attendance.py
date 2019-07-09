@@ -27,7 +27,7 @@ class IFIAttendance(models.Model):
 
         manual_checkin = self.search([('check_in', '<=', today_end),
                                       ('check_out', '>=', today_start)]).mapped('employee_id')
-        employees = self.env['hr.employee'].sudo().search(['id', '!=', 1])
+        employees = self.env['hr.employee'].sudo().search([('id', '!=', 1)])
         today_leaves = self.env['hr.leave'].sudo().search([('request_date_from', '<', today_end),
                                                            ('request_date_to', '>', today_start),
                                                            ('state', 'not in', ['cancel', 'refuse'])])
