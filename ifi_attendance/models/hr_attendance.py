@@ -18,10 +18,6 @@ class IFIAttendance(models.Model):
         today = pytz.UTC.localize(datetime.utcnow())
         today_start = today.replace(hour=0, minute=0, second=0)
         today_end = today.replace(hour=23, minute=59, second=59)
-        offset = datetime.now(pytz.timezone(self.env.user.tz or 'UTC')).utcoffset()
-        if offset:
-            today_start = today_start - offset
-            today_end = today_end - offset
         dow = today_start.weekday()
         calendar_ids = self.env['resource.calendar.attendance'].search([('dayofweek', '=', dow)])
 
@@ -33,12 +29,13 @@ class IFIAttendance(models.Model):
                                                            ('state', 'not in', ['cancel', 'refuse'])])
         attendance = employees - today_leaves.mapped('employee_id') - manual_checkin
         for leave in today_leaves:
+            employee_today_start = today_start
             if leave.employee_id in manual_checkin:
                 continue
             calendar_id = leave.employee_id.resource_calendar_id
             offset = datetime.now(pytz.timezone(calendar_id.tz or 'UTC')).utcoffset()
             if offset:
-                today_start = today_start + offset
+                employee_today_start = today_start + offset
             if leave.request_unit_half:
                 working_shift = calendar_ids.filtered(lambda x: x.calendar_id == calendar_id and x.day_period != leave.request_unit_half).sorted(key='hour_from')
                 if working_shift:
@@ -46,18 +43,19 @@ class IFIAttendance(models.Model):
                     checkout = working_shift[0].hour_to
                     if checkin:
                         self.create({'employee_id': leave.employee_id.id,
-                                     'check_in': today_start + relativedelta(hours=checkin),
-                                     'check_out': today_start + relativedelta(hours=checkout)
+                                     'check_in': employee_today_start + relativedelta(hours=checkin),
+                                     'check_out': employee_today_start + relativedelta(hours=checkout)
                                      })
         for r in attendance:
             calendar_id = r.resource_calendar_id
             offset = datetime.now(pytz.timezone(calendar_id.tz or 'UTC')).utcoffset()
+            employee_today_start = today_start
             if offset:
-                today_start = today_start + offset
+                employee_today_start = today_start + offset
             working_shift = calendar_ids.filtered(lambda x: x.calendar_id == calendar_id).sorted(key='hour_from')
             if working_shift:
-                checkin = today_start + relativedelta(hours=working_shift[0].hour_from)
-                checkout = today_start + relativedelta(hours=working_shift[len(working_shift) - 1].hour_to)
+                checkin = employee_today_start + relativedelta(hours=working_shift[0].hour_from)
+                checkout = employee_today_start + relativedelta(hours=working_shift[len(working_shift) - 1].hour_to)
                 if checkin:
                     self.create({'employee_id': r.id,
                                  'check_in': checkin,
