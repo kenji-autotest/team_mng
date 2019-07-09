@@ -37,7 +37,8 @@ class Employee(models.Model):
         for employee in self:
             user = employee.user_id
             if user:
-                project_ids = project.search(['|', ('members', 'in', [user.id]),
+                project_ids = project.search(['|',
+                                              # ('members', 'in', [user.id]),
                                               ('user_id', '=', user.id),
                                               ('message_partner_ids', 'in', [user.partner_id.id])
                                               ])

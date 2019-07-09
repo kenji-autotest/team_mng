@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record model="ir.ui.view" id="project_member_search_view">
+            <field name="name">Project Members</field>
+            <field name="model">project.member</field>
+            <field name="arch" type="xml">
+                <search string="Members">
+                    <field name="employee_id"/>
+                    <field name="project_id"/>
+                    <field name="job_id"/>
+                </search>
+            </field>
+    </record>
+
+    <record id="ifi_project_member_tree_view" model="ir.ui.view">
+        <field name="name">project.member.tree</field>
+        <field name="model">project.member</field>
+        <field name="arch" type="xml">
+            <tree string="Project Member">
+                <field name="project_id"/>
+                <field name="employee_id"/>
+                <field name="user_id" invisible="1"/>
+                <field name="job_id"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="allocation"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="ifi_project_member_form" model="ir.ui.view">
+        <field name="name">project.member.form</field>
+        <field name="model">project.member</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="employee_id" />
+                        <field name="user_id" invisible="1"/>
+                        <field name="job_id"/>
+                    </group>
+                    <group>
+                        <field name="date_from" />
+                        <field name="date_to"/>
+                        <field name="allocation"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ifi_project_member_action_tree" model="ir.actions.act_window">
+        <field name="name">Projects Team</field>
+        <field name="res_model">project.member</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="ifi_project_member_tree_view"/>
+    </record>
+
+    <record id="project_project_inherit_form_view" model="ir.ui.view">
+        <field name="name">project.project.inherit.form.view</field>
+        <field name="model">project.project</field>
+        <field name="inherit_id" ref="project.edit_project"/>
+        <field name="arch" type="xml">
+            <page name="settings" position="after">
+                <page string="Members">
+                    <field name="member_ids">
+                        <tree editable="bottom">
+                            <field name="project_id" context="{'default_project_id': context.get('project_id',active_id)}" />
+                            <field name="employee_id"/>
+                            <field name="user_id" invisible="1"/>
+                            <field name="job_id"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="allocation"/>
+                        </tree>
+                    </field>
+                </page>
+            </page>
+        </field>
+    </record>
+
+</odoo>
