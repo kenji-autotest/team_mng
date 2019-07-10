@@ -2,3 +2,4 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_project_member,project.member,model_project_member,base.group_user,1,0,0,0
 access_project_member_user,project.member.user,model_project_member,project.group_project_user,1,1,1,1
 access_project_member_manager,project.member.manager,model_project_member,project.group_project_manager,1,1,1,1
+access_project_timesheet_batches_manager,project.timesheet.batches.manager,model_project_timesheet_batches,project.group_project_manager,1,1,1,1

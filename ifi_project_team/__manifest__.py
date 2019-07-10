@@ -9,11 +9,10 @@
     'website': 'http://www.ifisolution.com',
     'version': '12',
     'license': 'AGPL-3',
-    'depends': [
-        'project',
-    ],
+    'depends': ['project','hr_timesheet'],
     'data': ['security/ir.model.access.csv',
              'views/project_team_member_view.xml',
+             'wizard/generate_timesheet_batches_view.xml'
     ],
     'installable': True,
 }

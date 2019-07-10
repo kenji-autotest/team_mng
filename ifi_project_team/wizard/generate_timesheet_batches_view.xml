@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="project_timesheets_batches_form" model="ir.ui.view">
+            <field name="name">project.timesheet.batches.form</field>
+            <field name="model">project.timesheet.batches</field>
+            <field name="arch" type="xml">
+                <form string="Generate Timesheets">
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_generate_timesheet" string="Generate" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_timesheet_batches_action" model="ir.actions.act_window">
+            <field name="name">Generate Timesheet</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.timesheet.batches</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="project_timesheets_batches_form"/>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem id="menu_project_timesheets_batches" name="Generate Timesheets" parent="project.menu_project_config"
+              action="project_timesheet_batches_action" sequence="100" groups="project.group_project_manager"/>
+
+</odoo>
