@@ -41,18 +41,16 @@ class IFIEmployee(models.Model):
                                           ('permanent', 'Permanent')
                                           ], default='permanent', track_visibility='onchange')
 
-    @api.multi
-    def create_user(self):
-        for r in self:
-            user_id = self.env['res.users'].create({'name': r.name, 'login': r.work_email})
-            if user_id:
-                r.user_id = user_id
-
     @api.model
     def create(self, vals):
         res = super(IFIEmployee, self).create(vals)
         if not vals.get('user_id', False):
-            res.sudo().create_user()
+            # user_id = self.env['res.users'].create({'name': res.name, 'login': res.work_email})
+            user_id = self.with_context(default_customer=False).env['res.users'].create({'name': res.name, 'login': res.work_email})
+            if user_id:
+                res.user_id = user_id
+                res.work_email = user_id.login
+                user_id.partner_id.email = user_id.login
         return res
 
 
