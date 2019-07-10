@@ -31,4 +31,18 @@
     <menuitem id="menu_project_timesheets_batches" name="Generate Timesheets" parent="project.menu_project_config"
               action="project_timesheet_batches_action" sequence="100" groups="project.group_project_manager"/>
 
+
+    <record id="timesheet_action_view_all_pivot" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">pivot</field>
+        <field name="view_id" ref="analytic.view_account_analytic_line_pivot"/>
+        <field name="act_window_id" ref="hr_timesheet.timesheet_action_all"/>
+    </record>
+    <record id="timesheet_action_view_all_graph" model="ir.actions.act_window.view">
+        <field name="sequence" eval="4"/>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="analytic.view_account_analytic_line_graph"/>
+        <field name="act_window_id" ref="hr_timesheet.timesheet_action_all"/>
+    </record>
+
 </odoo>
