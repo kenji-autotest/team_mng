@@ -29,7 +29,7 @@
     'description': """
 """,
     'version': '1.0',
-    'depends': ['hr','project'],
+    'depends': ['hr','project','ifi_project_team'],
     'data': ['security/employee_task_security.xml','views/employee_view.xml'],
     'images': ['static/description/banner.png'],
     'installable': True,
