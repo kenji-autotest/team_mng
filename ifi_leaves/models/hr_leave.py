@@ -93,13 +93,8 @@ class IFIEmployeeLeave(models.Model):
             hour_to = float_to_time(attendance_to.hour_to)
 
         tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'
-        if attendance_from.calendar_id.tz != tz:
-            self.date_from = timezone(tz).localize(datetime.combine(self.request_date_from, hour_from)).astimezone(
-                UTC).replace(tzinfo=None)
-            self.date_to = timezone(tz).localize(datetime.combine(self.request_date_to, hour_to)).astimezone(UTC).replace(
-                tzinfo=None)
-        else:
-            self.date_from = datetime.combine(self.request_date_from, hour_from).astimezone(UTC).replace(tzinfo=None)
-            self.date_to = datetime.combine(self.request_date_to, hour_to).astimezone(UTC).replace( tzinfo=None)
+        offset = datetime.now(pytz.timezone(tz or 'UTC')).utcoffset()
+        self.date_from = (datetime.combine(self.request_date_from, hour_from) + offset).replace(tzinfo=None)
+        self.date_to = (datetime.combine(self.request_date_to, hour_to) + offset).replace(tzinfo=None)
         self._onchange_leave_dates()
 
