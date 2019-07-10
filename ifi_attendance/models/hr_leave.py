@@ -3,10 +3,15 @@
 import pytz
 import re
 import time
-from datetime import datetime
+from datetime import datetime, time
 from dateutil.relativedelta import relativedelta
-from odoo import api, fields, models, _
-from odoo.exceptions import UserError
+from pytz import timezone, UTC
+from odoo import api, fields, models
+from odoo.addons.resource.models.resource import float_to_time, HOURS_PER_DAY
+from odoo.exceptions import AccessError, UserError, ValidationError
+from odoo.tools import float_compare
+from odoo.tools.float_utils import float_round
+from odoo.tools.translate import _
 
 
 class IFIAttendanceLeave(models.Model):
@@ -19,8 +24,8 @@ class IFIAttendanceLeave(models.Model):
         if vals.get('state', False):
             for r in self:
                 if r.state not in ['cancel', 'refuse']:
-                    attendance = self.env['hr.attendance'].search([('check_in', '<', r.request_date_to),
-                                                                   ('check_out', '>', r.request_date_from)])
+                    attendance = self.env['hr.attendance'].search([('check_in', '<', r.date_to),
+                                                                   ('check_out', '>', r.date_from)])
                     if attendance:
                         attendance.unlink()
         return res
