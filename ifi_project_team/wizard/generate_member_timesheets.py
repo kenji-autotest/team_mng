@@ -34,7 +34,7 @@ class GenerateAppraisals(models.TransientModel):
         return {
             'name': _('Timesheets'),
             'view_type': 'form',
-            'view_mode': 'tree,form',
+            'view_mode': 'tree,kanban',
             'res_model': 'account.analytic.line',
             'domain': [('id', 'in', res)],
             'views': [

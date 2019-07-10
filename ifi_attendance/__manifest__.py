@@ -8,7 +8,9 @@
     'description': """
 """,
     'depends': ['ifi_employee', 'hr_attendance', 'ifi_leaves'],
-    'data': ['data/hr_attendance_data.xml'],
+    'data': ['security/ir.model.access.csv',
+             'data/hr_attendance_data.xml',
+             'wizard/generate_attendances_view.xml'],
     'demo': [],
     'installable': True,
     'auto_install': False,

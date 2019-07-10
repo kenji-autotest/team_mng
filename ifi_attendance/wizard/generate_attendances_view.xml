@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<odoo>
+        <record id="employee_attendance_batches_form" model="ir.ui.view">
+            <field name="name">employee.attendance.batches.form</field>
+            <field name="model">generate.attendance.batches</field>
+            <field name="arch" type="xml">
+                <form string="Generate Attendance">
+                    <group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_generate_attendance" string="Generate" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="employee_attendance_batches_action" model="ir.actions.act_window">
+            <field name="name">Generate Attendance</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">generate.attendance.batches</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="employee_attendance_batches_form"/>
+            <field name="target">new</field>
+        </record>
+
+    <menuitem id="menu_generate_attendance_batches" name="Generate Attendances" parent="hr_attendance.menu_hr_attendance_settings"
+              action="employee_attendance_batches_action" sequence="100" groups="hr_attendance.group_hr_attendance_user"/>
+
+</odoo>

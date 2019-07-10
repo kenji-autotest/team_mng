@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_generate_attendance_batches_user,generate.attendance.batches.user,model_generate_attendance_batches,hr_attendance.group_hr_attendance_user,1,1,1,1
