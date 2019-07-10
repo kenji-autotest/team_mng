@@ -49,6 +49,8 @@ class IFIProjectTeamMember(models.Model):
             date = date_from + datetime.timedelta(days=d)
             members = members.filtered(lambda x: x.date_from <= date and (not x.date_to or x.date_to >= date))
             for r in members:
+                if date.weekday() not in [int(i.dayofweek) for i in r.employee_id.resource_calendar_id.attendance_ids]:
+                    continue
                 vals = {'project_id': r.project_id.id,
                         'employee_id': r.employee_id.id,
                         'date': date,
