@@ -35,6 +35,7 @@ class IFIEmployee(models.Model):
                               ('resigning', 'Resigning'),
                               ('terminated', 'Terminated'),
                               ('permanent', 'Permanent'),
+                              ('maternity', 'Maternity'),
                               ], string="State", default='working', track_visibility='onchange')
     employment_status = fields.Selection([('internship', 'Internship'),
                                           ('probation', 'Probation'),
