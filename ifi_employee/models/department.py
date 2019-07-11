@@ -66,10 +66,14 @@ class IFIEmployeeInherit(models.Model):
     def write(self, vals):
         res = super(IFIEmployeeInherit, self).write(vals)
         for r in self:
-            if r.department_id and r.department_id not in [i.department_id for i in r.department_allocation_ids]:
-                self.env['hr.employee.department'].create({'employee_id': r.id,
-                                                           'department_id': r.department_id.id,
-                                                           'date_start': fields.Date.today()})
+            if r.active:
+                if r.department_id and r.department_id not in [i.department_id for i in r.department_allocation_ids]:
+                    self.env['hr.employee.department'].create({'employee_id': r.id,
+                                                               'department_id': r.department_id.id,
+                                                               'date_start': fields.Date.today()})
+            else:
+                r.department_allocation_ids.write({'active': False})
+
         return res
 
 
@@ -80,6 +84,7 @@ class IFIDepartmentInherit(models.Model):
         date = fields.Date.today()
         employees_allocation = self.env['hr.employee.department'].search([('department_id', 'child_of', self.ids),
                                                                           ('date_start', '<=', date),
+                                                                          ('employee_id.active', '=', True),
                                                                           '|', ('date_end', '>', date),
                                                                           ('date_end', '=', False)])
         employees = self.env['hr.employee'].search([('department_id', 'child_of', self.ids)])
@@ -95,6 +100,7 @@ class IFIDepartmentInherit(models.Model):
                 'name': _('Employees'),
                 'res_model': 'hr.employee',
                 'domain': [('id', 'in', employee_ids)],
+                'context': {},
                 'view_id': False,
                 'view_mode': 'kanban,tree,form',
                 'view_type': 'form',
