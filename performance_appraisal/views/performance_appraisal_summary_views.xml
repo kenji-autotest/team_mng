@@ -89,6 +89,7 @@
                             <field name="next_objectives" attrs="{'readonly': [('state','!=', 'draft')]}" invisible="1"/>
                         </group>
                         <field name="private_access" invisible="1"/>
+                        <field name="review_private_access" invisible="1"/>
                         <field name="project_id" invisible="1"/>
                         <notebook>
                             <page name="peer_reviews" string="360 Reviews" attrs="{'invisible': [('appraisal_ids', '=', False)]}" >
@@ -115,7 +116,7 @@
 
                             <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
                                 <field name="private_note" attrs="{'invisible': [('appraisal_ids', '=', False)]}" />
-                                <field name="private_note_reviews" />
+                                <field name="private_note_reviews" attrs="{'invisible': [('review_private_access', '=', False)]}"/>
                             </page>
                         </notebook>
                     </sheet>

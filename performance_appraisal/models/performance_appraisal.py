@@ -69,6 +69,7 @@ class IFIEmployeeAppraisalSummary(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
     private_access = fields.Boolean(compute='compute_private_access')
+    review_private_access = fields.Boolean(compute='compute_review_private_access')
 
     _sql_constraints = [
         ('key_uniq', 'unique (employee_id, strategy_id, date)', 'Appraisal be unique.')
@@ -107,9 +108,24 @@ class IFIEmployeeAppraisalSummary(models.Model):
             elif is_dm or is_vice_dm:
                 if current_employee.department_id == r.department_id:
                     private_access = True
-            # elif current_employee == r.manager_id or current_employee == r.employee_id.parent_id:
-            #     private_access = True
+            elif current_employee == r.manager_id or current_employee == r.employee_id.parent_id:
+                private_access = True
             r.private_access = private_access
+
+    def compute_review_private_access(self):
+        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        is_manager = self.env.user.has_group('performance_appraisal.group_performance_appraisal_manager')
+        is_readall = self.env.user.has_group('performance_appraisal.group_performance_appraisal_readall')
+        is_dm = self.env.user.has_group('ifi_employee.group_hr_department_manager')
+        is_vice_dm = self.env.user.has_group('ifi_employee.group_hr_department_vice')
+        for r in self:
+            private_access = False
+            if is_manager or is_readall:
+                private_access = True
+            elif is_dm or is_vice_dm:
+                if current_employee.department_id == r.department_id:
+                    private_access = True
+            r.review_private_access = private_access
 
     @api.depends('employee_id')
     def _compute_department_id(self):
