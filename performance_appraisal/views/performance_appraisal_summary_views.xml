@@ -100,7 +100,7 @@
                                     </tree>
                                 </field>
                             </page>
-                             <page name="peer_reviews" string="Next Goals" >
+                             <page name="goals" string="Next Goals" >
                                 <field name="objective_ids">
                                     <tree editable="bottom">
                                         <field name="name" string="Goals"/>

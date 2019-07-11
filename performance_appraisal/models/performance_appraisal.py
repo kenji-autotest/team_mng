@@ -107,8 +107,8 @@ class IFIEmployeeAppraisalSummary(models.Model):
             elif is_dm or is_vice_dm:
                 if current_employee.department_id == r.department_id:
                     private_access = True
-            elif current_employee == r.manager_id or current_employee == r.employee_id.parent_id:
-                private_access = True
+            # elif current_employee == r.manager_id or current_employee == r.employee_id.parent_id:
+            #     private_access = True
             r.private_access = private_access
 
     @api.depends('employee_id')
@@ -222,7 +222,8 @@ class IFIEmployeePerformance(models.Model):
             elif is_dm or is_vice_dm:
                 if current_employee.department_id == r.department_id:
                     private_access = True
-            elif current_employee == r.reviewer_id or current_employee == r.employee_id.parent_id:
+            elif current_employee == r.reviewer_id:
+                # or current_employee == r.employee_id.parent_id:
                 private_access = True
             r.private_access = private_access
 

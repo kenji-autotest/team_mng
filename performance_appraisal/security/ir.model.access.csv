@@ -47,3 +47,5 @@ access_employee_appraisal_summary_vice,employee.appraisal.summary.vice,model_emp
 access_employee_appraisal_summary_user,employee.appraisal.summary.user,model_employee_appraisal_summary,performance_appraisal.group_performance_appraisal_user,1,1,1,0
 access_employee_appraisal_summary_readall,employee.appraisal.summary.readall,model_employee_appraisal_summary,performance_appraisal.group_performance_appraisal_readall,1,0,0,0
 access_employee_appraisal_summary,employee.appraisal.summary,model_employee_appraisal_summary,base.group_user,1,1,0,0
+
+access_employee_appraisal_summary,employee.appraisal.summary,model_employee_appraisal_summary,base.group_user,1,1,0,0
