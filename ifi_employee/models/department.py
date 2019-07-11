@@ -67,6 +67,7 @@ class IFIEmployeeInherit(models.Model):
         res = super(IFIEmployeeInherit, self).write(vals)
         for r in self:
             if r.active:
+                r.department_allocation_ids.write({'active': True})
                 if r.department_id and r.department_id not in [i.department_id for i in r.department_allocation_ids]:
                     self.env['hr.employee.department'].create({'employee_id': r.id,
                                                                'department_id': r.department_id.id,
