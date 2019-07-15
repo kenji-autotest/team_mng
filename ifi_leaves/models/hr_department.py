@@ -25,7 +25,7 @@ class IFIDepartmentLeave(models.Model):
             for r in self:
                 for i in r.leave_approval_user_ids:
                     if not i.has_group('hr_holidays.group_hr_holidays_user'):
-                        i.groups_id = [(4, leave_group)]
+                        i.groups_id = [(4, leave_group.id)]
         return res
 
 
