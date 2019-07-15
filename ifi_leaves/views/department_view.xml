@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//group" position="after">
                 <notebook>
-                    <page name="departments" string="Leave Approval Settings" groups="hr.group_hr_user,hr.group_hr_manager,ifi_employee.group_hr_department_manager">
+                    <page name="departments" string="Leave Approval Settings">
                         <field name="leave_approval_user_ids" string="Leave Approval Settings">
                             <tree editable="top">
                                 <field name="name" options="{'no_create_edit': True}"/>
