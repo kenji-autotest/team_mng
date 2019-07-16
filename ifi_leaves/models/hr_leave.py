@@ -44,57 +44,57 @@ class IFIEmployeeLeave(models.Model):
                         and (self.env.user.employee_ids[0].department_id == holiday.employee_id.department_id):
                     holiday.can_approve = True
 
-    @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
-                  'request_date_from', 'request_date_to',
-                  'employee_id')
-    def _onchange_request_parameters(self):
-        if not self.request_date_from:
-            self.date_from = False
-            return
-
-        if self.request_unit_half or self.request_unit_hours:
-            self.request_date_to = self.request_date_from
-
-        if not self.request_date_to:
-            self.date_to = False
-            return
-
-        domain = [('calendar_id', '=',
-                   self.employee_id.resource_calendar_id.id or self.env.user.company_id.resource_calendar_id.id)]
-        attendances = self.env['resource.calendar.attendance'].search(domain, order='dayofweek, day_period DESC')
-
-        # find first attendance coming after first_day
-        attendance_from = next((att for att in attendances if int(att.dayofweek) >= self.request_date_from.weekday()),
-                               attendances[0])
-        # find last attendance coming before last_day
-        attendance_to = next(
-            (att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()),
-            attendances[-1])
-
-        if self.request_unit_half:
-            if self.request_date_from_period == 'am':
-                hour_from = float_to_time(attendance_from.hour_from)
-                hour_to = float_to_time(attendance_from.hour_to)
-            else:
-                hour_from = float_to_time(attendance_to.hour_from)
-                hour_to = float_to_time(attendance_to.hour_to)
-        elif self.request_unit_hours:
-            # This hack is related to the definition of the field, basically we convert
-            # the negative integer into .5 floats
-            hour_from = float_to_time(
-                abs(self.request_hour_from) - 0.5 if self.request_hour_from < 0 else self.request_hour_from)
-            hour_to = float_to_time(
-                abs(self.request_hour_to) - 0.5 if self.request_hour_to < 0 else self.request_hour_to)
-        elif self.request_unit_custom:
-            hour_from = self.date_from.time()
-            hour_to = self.date_to.time()
-        else:
-            hour_from = float_to_time(attendance_from.hour_from)
-            hour_to = float_to_time(attendance_to.hour_to)
-
-        tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'
-        offset = datetime.now(pytz.timezone(tz or 'UTC')).utcoffset()
-        self.date_from = (datetime.combine(self.request_date_from, hour_from) + offset).replace(tzinfo=None)
-        self.date_to = (datetime.combine(self.request_date_to, hour_to) + offset).replace(tzinfo=None)
-        self._onchange_leave_dates()
+    # @api.onchange('request_date_from_period', 'request_hour_from', 'request_hour_to',
+    #               'request_date_from', 'request_date_to',
+    #               'employee_id')
+    # def _onchange_request_parameters(self):
+    #     if not self.request_date_from:
+    #         self.date_from = False
+    #         return
+    #
+    #     if self.request_unit_half or self.request_unit_hours:
+    #         self.request_date_to = self.request_date_from
+    #
+    #     if not self.request_date_to:
+    #         self.date_to = False
+    #         return
+    #
+    #     domain = [('calendar_id', '=',
+    #                self.employee_id.resource_calendar_id.id or self.env.user.company_id.resource_calendar_id.id)]
+    #     attendances = self.env['resource.calendar.attendance'].search(domain, order='dayofweek, day_period DESC')
+    #
+    #     # find first attendance coming after first_day
+    #     attendance_from = next((att for att in attendances if int(att.dayofweek) >= self.request_date_from.weekday()),
+    #                            attendances[0])
+    #     # find last attendance coming before last_day
+    #     attendance_to = next(
+    #         (att for att in reversed(attendances) if int(att.dayofweek) <= self.request_date_to.weekday()),
+    #         attendances[-1])
+    #
+    #     if self.request_unit_half:
+    #         if self.request_date_from_period == 'am':
+    #             hour_from = float_to_time(attendance_from.hour_from)
+    #             hour_to = float_to_time(attendance_from.hour_to)
+    #         else:
+    #             hour_from = float_to_time(attendance_to.hour_from)
+    #             hour_to = float_to_time(attendance_to.hour_to)
+    #     elif self.request_unit_hours:
+    #         # This hack is related to the definition of the field, basically we convert
+    #         # the negative integer into .5 floats
+    #         hour_from = float_to_time(
+    #             abs(self.request_hour_from) - 0.5 if self.request_hour_from < 0 else self.request_hour_from)
+    #         hour_to = float_to_time(
+    #             abs(self.request_hour_to) - 0.5 if self.request_hour_to < 0 else self.request_hour_to)
+    #     elif self.request_unit_custom:
+    #         hour_from = self.date_from.time()
+    #         hour_to = self.date_to.time()
+    #     else:
+    #         hour_from = float_to_time(attendance_from.hour_from)
+    #         hour_to = float_to_time(attendance_to.hour_to)
+    #
+    #     tz = self.env.user.tz if self.env.user.tz and not self.request_unit_custom else 'UTC'
+    #     offset = datetime.now(pytz.timezone(tz or 'UTC')).utcoffset()
+    #     self.date_from = (datetime.combine(self.request_date_from, hour_from) + offset).replace(tzinfo=None)
+    #     self.date_to = (datetime.combine(self.request_date_to, hour_to) + offset).replace(tzinfo=None)
+    #     self._onchange_leave_dates()
 
