@@ -29,7 +29,7 @@
     'description': """
 """,
     'version': '1.0',
-    'depends': ['hr'],
+    'depends': ['hr', 'base_encrypted_field'],
     'data': ['security/employee_security.xml',
              'security/ir.model.access.csv',
              'views/employee_view.xml',

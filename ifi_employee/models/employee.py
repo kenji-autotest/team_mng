@@ -26,11 +26,12 @@ class IFIEmployee(models.Model):
 
     _inherit = "hr.employee"
 
-    skype = fields.Char(string='Skype')
+    encrypted = fields.Encrypted()
+    skype = fields.Char(string='Skype', encrypt='encrypted')
     job_title = fields.Char("Job Title", required=True)
     work_email = fields.Char('Work Email')
     department_id = fields.Many2one('hr.department', string='Department', required=True)
-    staff_id = fields.Char(string='Staff ID')
+    staff_id = fields.Char(string='Staff ID', encrypt='encrypted')
     state = fields.Selection([('working', 'Working'),
                               ('resigning', 'Resigning'),
                               ('terminated', 'Terminated'),
