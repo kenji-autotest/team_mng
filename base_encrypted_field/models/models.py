@@ -55,8 +55,10 @@ class IrModelFields(models.Model):
                 raise UserError(_(
                     "Encryption field `%s` not found for encrypt"
                     "field `%s`!") % (field.encrypt, field.name))
-            encryption_record = self._reflect_field(encryption_field)
-            params['encryption_field_id'] = encryption_record.id
+            # encryption_record = self._reflect_field(encryption_field)
+            record_id = self.search([('model', '=', encryption_field.model_name), ('name', '=', encryption_field.name)])
+            if record_id:
+                params['encryption_field_id'] = record_id.id
 
         return params
 
