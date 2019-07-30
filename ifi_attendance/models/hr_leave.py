@@ -27,6 +27,6 @@ class IFIAttendanceLeave(models.Model):
                     attendance = self.env['hr.attendance'].search([('check_in', '<', r.date_to),
                                                                    ('check_out', '>', r.date_from)])
                     if attendance:
-                        attendance.unlink()
+                        attendance.sudo().unlink()
         return res
 
