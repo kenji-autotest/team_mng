@@ -81,3 +81,10 @@ class IFIEmployeeLeave(models.Model):
                 if not self.env.user.has_group('hr_holidays.group_hr_holidays_manager'):
                     raise UserError(_('Only an Leave Manager can apply the second approval on leave requests.'))
 
+    def _get_number_of_days(self, date_from, date_to, employee_id):
+        res = super(IFIEmployeeLeave, self)._get_number_of_days(date_from, date_to, employee_id)
+        """ Returns a float equals to the timedelta between two dates given as string."""
+        if self.request_unit_half:
+            return 0.5
+        return res
+
