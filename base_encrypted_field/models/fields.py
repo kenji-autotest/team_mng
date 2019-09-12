@@ -56,7 +56,7 @@ def _get_attrs(self, model, name):
     attrs = _get_attrs.super(self, model, name)
     if attrs.get('encrypt'):
         # by default, encrypt fields are not stored and not copied
-        attrs['store'] = False
+        attrs['store'] = True
         attrs['copy'] = attrs.get('copy', False)
         attrs['compute'] = self._compute_encrypt
         if not attrs.get('readonly'):
@@ -115,3 +115,23 @@ class Encrypted(fields.Field):
 
 
 fields.Encrypted = Encrypted
+
+
+class Char(_String):
+    type = 'char'
+
+    def convert_to_column(self, value, record, values=None, validate=True):
+        if value is None or value is False:
+            return None
+        # we need to convert the string to a unicode object to be able
+        # to evaluate its length (and possibly truncate it) reliably
+        if getattr(self, 'encrypt', None):
+            return fernet.encrypt(json.dumps(value).encode())
+        return pycompat.to_text(value)[:self.size]
+
+    def convert_to_cache(self, value, record, validate=True):
+        if value is None or value is False:
+            return False
+        if getattr(self, 'encrypt', None):
+            return fernet.decrypt(bytes(value)).decode()[:self.size]
+        return pycompat.to_text(value)[:self.size]

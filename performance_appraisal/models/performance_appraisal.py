@@ -69,11 +69,22 @@ class IFIEmployeeAppraisalSummary(models.Model):
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.user.company_id)
     active = fields.Boolean(default=True)
     private_access = fields.Boolean(compute='compute_private_access')
-    review_private_access = fields.Boolean(compute='compute_review_private_access')
+    review_private_access = fields.Boolean(compute='compute_private_access')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                  default=lambda self: self.env.user.company_id.currency_id)
+    suggested_amount = fields.Monetary(string='Suggested Amount', help="Mức tăng đề xuất")
+    approved_amount = fields.Monetary(string='New Amount', help="Mức được chấp thuận")
+    gross = fields.Monetary(string='Current Gross', help="Lương gross hiện tại")
+    new_gross = fields.Monetary(string='New Gross', help="Lương gross sau điều chỉnh", compute='_compute_new_gross', store=True)
 
     _sql_constraints = [
         ('key_uniq', 'unique (employee_id, strategy_id, date)', 'Appraisal be unique.')
     ]
+
+    @api.depends('gross', 'approved_amount')
+    def _compute_new_gross(self):
+        for r in self:
+            r.new_gross = r.gross + r.approved_amount
 
     @api.depends('objective_ids', 'objective_ids.name')
     def _compute_next_objectives(self):
@@ -108,24 +119,11 @@ class IFIEmployeeAppraisalSummary(models.Model):
             elif is_dm or is_vice_dm:
                 if current_employee.department_id == r.department_id:
                     private_access = True
-            elif current_employee == r.manager_id or current_employee == r.employee_id.parent_id:
-                private_access = True
+            review_private_access = private_access
+            if not review_private_access and (current_employee == r.manager_id or current_employee == r.employee_id.parent_id):
+                review_private_access = True
             r.private_access = private_access
-
-    def compute_review_private_access(self):
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
-        is_manager = self.env.user.has_group('performance_appraisal.group_performance_appraisal_manager')
-        is_readall = self.env.user.has_group('performance_appraisal.group_performance_appraisal_readall')
-        is_dm = self.env.user.has_group('ifi_employee.group_hr_department_manager')
-        is_vice_dm = self.env.user.has_group('ifi_employee.group_hr_department_vice')
-        for r in self:
-            private_access = False
-            if is_manager or is_readall:
-                private_access = True
-            elif is_dm or is_vice_dm:
-                if current_employee.department_id == r.department_id:
-                    private_access = True
-            r.review_private_access = private_access
+            r.review_private_access = review_private_access
 
     @api.depends('employee_id')
     def _compute_department_id(self):
@@ -187,6 +185,20 @@ class IFIEmployeeAppraisalSummary(models.Model):
             if r.state != 'draft' or any(i.state != 'draft' for i in r.appraisal_ids):
                 raise UserError(_('You cannot remove/deactivate an appraisal which is submitted.'))
         return super(IFIEmployeeAppraisalSummary, self).unlink()
+
+    @api.multi
+    def action_view_objectives(self):
+        user_id = self.employee_id.user_id or False
+        if user_id:
+            user_id = user_id.id
+        action_rec = self.env.ref('project.action_view_task')
+        action = action_rec.read()[0]
+        action['domain'] = [('user_id', '=', user_id),
+                            ('appraisal_id', '=', self.id)]
+        ctx = dict(self.env.context)
+        ctx.update({})
+        action['context'] = ctx
+        return action
 
 
 class IFIEmployeePerformance(models.Model):
@@ -334,15 +346,6 @@ class IFIEmployeePerformanceDetails(models.Model):
         for r in self:
             if r.weight and r.value_id:
                 r.score = r.weight * r.value_id.conceptual_score / 100
-
-    # @api.onchange('indicator_id')
-    # def onchange_indicator_id(self):
-    #     if not self.indicator_id:
-    #         return {}
-    #     return {'domain': {'value_id': [
-    #         ('id', 'in', self.indicator_id.value_ids.ids)
-    #     ]}}
-
 
 
 

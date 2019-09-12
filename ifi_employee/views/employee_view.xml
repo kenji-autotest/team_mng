@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='address_id']" position="before">
                 <field name="staff_id"/>
+                <field name="staff_code"/>
             </xpath>
 
             <xpath expr="//field[@name='work_phone']" position="after">

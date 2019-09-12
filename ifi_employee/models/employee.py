@@ -29,6 +29,7 @@ class IFIEmployee(models.Model):
     encrypted = fields.Encrypted()
     # name = fields.Char(related='resource_id.name', store=True, oldname='name_related', readonly=False, encrypt='encrypted')
     birthday = fields.Date('Date of Birth', groups="hr.group_hr_user")
+    # skype = fields.Char(string='Skype', encrypt='encrypted')
     skype = fields.Char(string='Skype')
     job_title = fields.Char("Job Title", required=True)
     work_email = fields.Char('Work Email')
@@ -44,6 +45,7 @@ class IFIEmployee(models.Model):
                                           ('probation', 'Probation'),
                                           ('permanent', 'Permanent')
                                           ], default='permanent', track_visibility='onchange')
+    staff_code = fields.Char()
 
     @api.model
     def create(self, vals):

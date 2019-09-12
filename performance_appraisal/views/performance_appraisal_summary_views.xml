@@ -61,6 +61,12 @@
                                 <field name="active" widget="boolean_button"
                                     options='{"terminology": "archive"}'/>
                             </button>
+                            <button name="action_view_objectives"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-pencil-square-o"
+                                string="Next Goals">
+                            </button>
                         </div>
                         <div class="oe_title">
                             <label for="employee_id" class="oe_edit_only"/>
@@ -114,9 +120,19 @@
                                 </field>
                             </page>
 
-                            <page name="private" string="Private Note" attrs="{'invisible': [('private_access', '=', False)]}">
+                            <page name="private" string="Private Note" attrs="{'invisible': [('review_private_access', '=', False)]}">
+                                <group>
+                                    <group>
+                                        <field name="suggested_amount" attrs="{'readonly': [('state','!=', 'draft')]}"/>
+                                        <field name="approved_amount" />
+                                    </group>
+                                    <group>
+                                        <field name="gross"/>
+                                        <field name="new_gross" />
+                                    </group>
+                                </group>
                                 <field name="private_note" attrs="{'invisible': [('appraisal_ids', '=', False)]}" />
-                                <field name="private_note_reviews" attrs="{'invisible': [('review_private_access', '=', False)]}"/>
+                                <field name="private_note_reviews" />
                             </page>
                         </notebook>
                     </sheet>
