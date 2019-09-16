@@ -60,5 +60,5 @@ class ProjectLeaveReport(models.Model):
                 (l.request_date_from < p.date_to or p.date_to is null) and p.date_from < l.request_date_to
             INNER JOIN
             hr_employee AS e ON l.employee_id = e.id 
-            WHERE l.state != 'refuse' and e.active=TRUE and pp.active=TRUE
+            WHERE l.state != 'refuse' and pp.active=TRUE --and e.active=TRUE
         )""")
