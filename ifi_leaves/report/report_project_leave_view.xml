@@ -23,7 +23,8 @@
                 <pivot string="Project Leave Report" disable_linking="True">
                     <field name="date_from" type="col" interval="week"/>
                     <field name="project_id" type="row"/>
-                    <field name="employee_id" type="row"/>
+                    <field name="job_title" type="row"/>
+<!--                    <field name="employee_id" type="row"/>-->
                     <field name="number_of_days" type="measure"/>
                 </pivot>
             </field>
@@ -49,7 +50,7 @@
            <field name="name">Project Leave Report</field>
            <field name="res_model">project.leave.report</field>
            <field name="view_type">form</field>
-           <field name="view_mode">graph,pivot</field>
+           <field name="view_mode">pivot,graph</field>
        </record>
 
        <!-- Menu -->

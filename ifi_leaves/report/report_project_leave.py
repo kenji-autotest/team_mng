@@ -10,7 +10,7 @@ class ProjectLeaveReport(models.Model):
 
     leave_id = fields.Many2one('hr.leave', string='Leave Request')
     employee_id = fields.Many2one('hr.employee', string='Employee')
-    job_title = fields.Char()
+    job_title = fields.Many2one('hr.job', required=True, string='Position')
     department_id = fields.Many2one('hr.department')
     date_from = fields.Date()
     date_to = fields.Date()
@@ -37,7 +37,7 @@ class ProjectLeaveReport(models.Model):
         self._cr.execute(""" CREATE VIEW project_leave_report AS (
             SELECT row_number() over() as id,
             e.id AS employee_id,
-            e.job_title,
+            p.job_id as job_title,
             e.department_id,
             l.id AS leave_id,
             pp.id AS project_id,

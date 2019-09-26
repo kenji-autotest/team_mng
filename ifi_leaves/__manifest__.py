@@ -8,7 +8,7 @@
     'description': """
 Allows multiple managers to approve Leave
 """,
-    'depends': ['hr_holidays', 'ifi_employee', 'project'],
+    'depends': ['hr_holidays', 'ifi_employee', 'project', 'ifi_project_team'],
     'data': ['security/ir.model.access.csv',
              'views/department_view.xml',
              'views/leave_view.xml',
