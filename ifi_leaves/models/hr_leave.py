@@ -20,6 +20,16 @@ class IFIEmployeeLeave(models.Model):
 
     can_approve = fields.Boolean('Can Approve', compute='_compute_can_approve')
     approval_user_ids = fields.Many2many('res.users', string='2nd Approval By', compute='_compute_approval_user_ids', store=True)
+    request_date_from = fields.Date('Request Start Date', track_visibility='onchange', track_sequence=1)
+    request_date_to = fields.Date('Request End Date', track_visibility='onchange', track_sequence=2)
+    date_from = fields.Datetime(
+        'Start Date', readonly=True, index=True, copy=False, required=True,
+        default=fields.Datetime.now, track_visibility=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
+    date_to = fields.Datetime(
+        'End Date', readonly=True, copy=False, required=True,
+        default=fields.Datetime.now, track_visibility=False,
+        states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     @api.depends('employee_id')
     def _compute_approval_user_ids(self):
