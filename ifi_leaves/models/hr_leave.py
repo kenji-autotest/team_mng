@@ -24,11 +24,11 @@ class IFIEmployeeLeave(models.Model):
     request_date_to = fields.Date('Request End Date', track_visibility='onchange', track_sequence=2)
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False, required=True,
-        default=fields.Datetime.now, track_visibility=False,
+        default=fields.Datetime.now, track_visibility='none',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     date_to = fields.Datetime(
         'End Date', readonly=True, copy=False, required=True,
-        default=fields.Datetime.now, track_visibility=False,
+        default=fields.Datetime.now, track_visibility='none',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
 
     @api.depends('employee_id')
